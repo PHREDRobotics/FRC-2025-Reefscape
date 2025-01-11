@@ -1,80 +1,179 @@
 package frc.robot.subsystems;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.function.DoubleSupplier;
-
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.Filesystem;
+//import com.kauailabs.navx.frc.AHRS;
+import com.studica.frc.AHRS;
+import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.SwerveConstants;
-import swervelib.SwerveDrive;
-import swervelib.math.SwerveMath;
-import swervelib.parser.SwerveParser;
+import frc.robot.Constants.DriveConstants;
+import frc.robot.controls.LogitechPro;
 
-public class SwerveSubsystem extends SubsystemBase{
-    private final SwerveDrive swerveDrive;
-    private final Field2d field = new Field2d();
+public class SwerveSubsystem extends SubsystemBase {
+  private final SwerveModule frontLeft = new SwerveModule(
+      DriveConstants.kFrontLeftDriveMotorPort,
+      DriveConstants.kFrontLeftTurningMotorPort,
+      DriveConstants.kFrontLeftDriveEncoderReversed,
+      DriveConstants.kFrontLeftTurningEncoderReversed,
+      DriveConstants.kFrontLeftModuleChassisAngularOffset,
+      DriveConstants.kFrontLeftDriveAbsoluteEncoderReversed,
+      DriveConstants.kFrontLeftDriveInverted);
 
-    File swerveJsonDirectory = new File(Filesystem.getDeployDirectory(), "swerve");
+  private final SwerveModule frontRight = new SwerveModule(
+      DriveConstants.kFrontRightDriveMotorPort,
+      DriveConstants.kFrontRightTurningMotorPort,
+      DriveConstants.kFrontRightDriveEncoderReversed,
+      DriveConstants.kFrontRightTurningEncoderReversed,
+      DriveConstants.kFrontRightModuleChassisAngularOffset,
+      DriveConstants.kFrontRightDriveAbsoluteEncoderReversed,
+      DriveConstants.kFrontRightDriveInverted);
 
-    Boolean fieldOriented = true;
+  public final SwerveModule backLeft = new SwerveModule(
+      DriveConstants.kBackLeftDriveMotorPort,
+      DriveConstants.kBackLeftTurningMotorPort,
+      DriveConstants.kBackLeftDriveEncoderReversed,
+      DriveConstants.kBackLeftTurningEncoderReversed,
+      DriveConstants.kBackLeftModuleChassisAngularOffset,
+      DriveConstants.kBackLeftDriveAbsoluteEncoderReversed,
+      DriveConstants.kBackLeftDriveInverted);
 
-    public SwerveSubsystem() {
-        try {
-            swerveDrive = new SwerveParser(swerveJsonDirectory).createSwerveDrive(SwerveConstants.MAX_SPEED);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+  private final SwerveModule backRight = new SwerveModule(
+      DriveConstants.kBackRightDriveMotorPort,
+      DriveConstants.kBackRightTurningMotorPort,
+      DriveConstants.kBackRightDriveEncoderReversed,
+      DriveConstants.kBackRightTurningEncoderReversed,
+      DriveConstants.kBackRightModuleChassisAngularOffset,
+      DriveConstants.kBackRightDriveAbsoluteEncoderReversed,
+      DriveConstants.kBackRightDriveInverted);
 
-        swerveDrive.setHeadingCorrection(false);
-        swerveDrive.setCosineCompensator(false);
+  private final AHRS gyro = new AHRS(AHRS.NavXComType.kMXP_SPI);
+  // private final SimDeviceSim simGyro = new SimDeviceSim();
+  private final Field2d m_field = new Field2d();
 
-        SmartDashboard.putData("Field", field);
+  private final LogitechPro m_joyStick;
+
+  // private final SwerveDriveOdometry odometer = new
+  // SwerveDriveOdometry(DriveConstants.kDriveKinematics,
+  // new Rotation2d(), getModulePositions());
+
+  SwerveDriveOdometry odometer = new SwerveDriveOdometry(
+      DriveConstants.kDriveKinematics, gyro.getRotation2d(),
+      getModulePositions(), new Pose2d(0.0, 0.0, new Rotation2d()));
+
+  public SwerveModulePosition[] getModulePositions() {
+    return new SwerveModulePosition[] {
+        frontLeft.getPosition(),
+        frontRight.getPosition(),
+        backLeft.getPosition(),
+        backRight.getPosition()
+    };
+  }
+
+  public SwerveSubsystem(LogitechPro joystick) {
+    m_joyStick = joystick;
+    SmartDashboard.putData("Field", m_field);
+    new Thread(() -> {
+      try {
+        Thread.sleep(1000);
+        zeroHeading();
+        initModules();
+      } catch (Exception e) {
+      }
+    }).start();
+  }
+
+  public void zeroHeading() {
+    // gyro.zeroYaw();
+    gyro.reset();
+    frontLeft.resetEncoders();
+    frontRight.resetEncoders();
+    backLeft.resetEncoders();
+    backRight.resetEncoders();
+
+  }
+
+  public double getHeading() {
+    if (gyro.isMagnetometerCalibrated()) {
+      // We will only get valid fused headings if the magnetometer is calibrated
+      return gyro.getFusedHeading();
     }
 
-    /**
-     * Command to drive the robot using translative values and heading as angular velocity.
-     *
-     * @param translationX     Translation in the X direction. Cubed for smoother controls.
-     * @param translationY     Translation in the Y direction. Cubed for smoother controls.
-     * @param angularRotationX Angular velocity of the robot to set. Cubed for smoother controls.
-     * @return Drive command.
-     */
-    public Command driveCommand(DoubleSupplier translationX, DoubleSupplier translationY, DoubleSupplier angularRotationX) {
-      return run(() -> {
-        // Make the robot move
-        swerveDrive.drive(SwerveMath.scaleTranslation(new Translation2d(
-                              translationX.getAsDouble() * swerveDrive.getMaximumChassisVelocity(),
-                              translationY.getAsDouble() * swerveDrive.getMaximumChassisVelocity()), 0.8),
-                          Math.pow(angularRotationX.getAsDouble(), 3) * swerveDrive.getMaximumChassisVelocity(),
-                          fieldOriented,
-                          false);
-      });
-    }
+    // We have to invert the angle of the NavX so that rotating the robot
+    // counter-clockwise makes the angle increase.
+    // if (-gyro.getYaw() >= 0) {
+    return gyro.getYaw();
 
-    public Command toggleFieldOrientedCommand() {
-      return this.runOnce(
-        () -> setFieldOriented(!fieldOriented)
-        );
-    }
+    // } else {
+    // return 360 + -gyro.getYaw();
+    // }
+  }
 
-    public Command resetGyro() {
-      return this.runOnce(() -> swerveDrive.zeroGyro());
-    }
+  public Rotation2d getRotation2d() {
+    return Rotation2d.fromDegrees(getHeading());
+  }
 
-    public void setFieldOriented(Boolean isFieldOriented) {
-      fieldOriented = isFieldOriented;
-    }
+  public Pose2d getPose() {
+    return odometer.getPoseMeters();
+  }
 
-    @Override
-    public void simulationPeriodic() {
-      field.setRobotPose(swerveDrive.getPose());
+  public void resetOdometry(Pose2d pose) {
+    odometer.resetPosition(getRotation2d(), getModulePositions(), getPose());
+  }
 
-      SmartDashboard.putNumber("Pose X: ", swerveDrive.getPose().getX());
-      SmartDashboard.putNumber("Pose Y: ", swerveDrive.getPose().getY());
-    }  
+  // -------------------------------------------------
+  // ------------- Update Dashboard ----------------
+  @Override
+  public void periodic() {
+    odometer.update(getRotation2d(), getModulePositions());
+
+    SmartDashboard.putNumber("throttle", m_joyStick.getThrottl());
+
+    SmartDashboard.putString("Robot Heading (Rotation2d)", gyro.getRotation2d().toString());
+    SmartDashboard.putNumber("Robot Heading (Degrees)", getHeading());
+    SmartDashboard.putNumber("Front Left Turning Position", frontLeft.getTurningPosition() * (180 / Math.PI));
+    SmartDashboard.putNumber("Front Right Turning Position", frontRight.getTurningPosition() * (180 / Math.PI));
+    SmartDashboard.putNumber("Back Left Turning Position", backLeft.getTurningPosition() * (180 / Math.PI));
+    SmartDashboard.putNumber("Back Right Turning Position", backRight.getTurningPosition() * (180 / Math.PI));
+
+    SmartDashboard.putString("Robot Location", getPose().getTranslation().toString());
+
+    SmartDashboard.putBoolean("Should we blame Hardware/Electrical?", true);
+  }
+
+  @Override
+  public void simulationPeriodic() {
+    odometer.update(new Rotation2d(-Math.PI), getModulePositions());
+    m_field.setRobotPose(odometer.getPoseMeters());
+  }
+
+  public void initModules() {
+    SwerveModuleState state = new SwerveModuleState(0, new Rotation2d());
+    frontLeft.setDesiredState(state);
+    frontRight.setDesiredState(state);
+    backLeft.setDesiredState(state);
+    backRight.setDesiredState(state);
+  }
+
+  public void stopModules() {
+    frontLeft.stop();
+    frontRight.stop();
+    backLeft.stop();
+    backRight.stop();
+  }
+  // state.angle.getRadians());
+
+  public void setModuleStates(SwerveModuleState[] desiredStates) {
+    SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
+    frontLeft.setDesiredState(desiredStates[0]);
+    frontRight.setDesiredState(desiredStates[1]);
+    backLeft.setDesiredState(desiredStates[2]);
+    backRight.setDesiredState(desiredStates[3]);
+  }
+
 }
