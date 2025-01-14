@@ -111,10 +111,10 @@ public final class Constants {
     public static final boolean kFrontRightDriveAbsoluteEncoderReversed = false;
     public static final boolean kBackRightDriveAbsoluteEncoderReversed = false;
 
-    public static final double kFrontLeftModuleChassisAngularOffset = 0;
-    public static final double kBackLeftModuleChassisAngularOffset = 0;
-    public static final double kFrontRightModuleChassisAngularOffset = 0;
-    public static final double kBackRightModuleChassisAngularOffset = 0;
+    public static final double kFrontLeftModuleChassisAngularOffset = k2pi;
+    public static final double kBackLeftModuleChassisAngularOffset = k2pi;
+    public static final double kFrontRightModuleChassisAngularOffset = k2pi;
+    public static final double kBackRightModuleChassisAngularOffset = k2pi;
 
     public static final double kPhysicalMaxSpeedMetersPerSecond = 5;
     public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 2 * k2pi;

@@ -46,6 +46,11 @@ public class SwerveModule {
       boolean absoluteEncoderReversed,
       boolean driveMotorInverted) {
 
+
+      //  double drivingFactor = ModuleConstants.kWheelDiameterMeters * Math.PI
+        // / ModuleConstants.kDriveMotorGearRatio;
+
+
     SparkMaxConfig driveConfig = new SparkMaxConfig();
     driveSparkMax = new SparkMax(driveMotorId, MotorType.kBrushless);
     driveEncoder = driveSparkMax.getEncoder();
@@ -54,10 +59,12 @@ public class SwerveModule {
         .smartCurrentLimit(50)
         .idleMode(IdleMode.kBrake);
     driveConfig.encoder
-        .positionConversionFactor(moduleOffset)
-        .velocityConversionFactor(1000);
+
+        //either this or the turning one needs fixed
+        .positionConversionFactor(ModuleConstants.kDriveEncoderRot2Meter)
+        .velocityConversionFactor(6);
     driveConfig.closedLoop
-        .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
+        .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
         .pid(ModuleConstants.kDrivingP, ModuleConstants.kDrivingI, ModuleConstants.kDrivingD);
 
     driveSparkMax.configure(driveConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
@@ -69,8 +76,10 @@ public class SwerveModule {
         .inverted(driveMotorReversed)
         .idleMode(IdleMode.kBrake);
     turnConfig.absoluteEncoder
+
+        //either this or the driving one needs fixed
         .positionConversionFactor(moduleOffset)
-        .velocityConversionFactor(1000);
+        .velocityConversionFactor(10);
     turnConfig.closedLoop
         .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
         .pid(ModuleConstants.kTurningP, ModuleConstants.kTurningI, ModuleConstants.kTurningD);
