@@ -73,7 +73,6 @@ public class SwerveModule {
   /**
    * Returns current turn position in range -pi to pi
    */
-
   // Before it was
   // return turningSparkMax.getEncoder().getPosition();
 
@@ -88,7 +87,8 @@ public class SwerveModule {
   }
 
   public SwerveModulePosition getPosition() {
-    return new SwerveModulePosition(getDrivePosition(),
+    return new SwerveModulePosition(
+        driveEncoder.getPosition(),
         new Rotation2d(turningEncoder.getPosition() - chassisAngularOffset));
   }
 

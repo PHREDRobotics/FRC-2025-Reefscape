@@ -42,6 +42,8 @@ public final class Constants {
     public static final double kDrivingMotorReduction = (45.0 * 22) / (kDrivingMotorPinionTeeth * 15);
     public static final double kDriveWheelFreeSpeedRps = (kDrivingMotorFreeSpeedRps * kWheelCircumferenceMeters)
         / kDrivingMotorReduction;
+
+        
     // public static final double kTurningEncoderRot2Rad = kTurningMotorGearRatio;
     public static final int kTurnMotorEncoderTicksPerRotation = 42;
     public static final double kTurningMotorRotationPerSteerRotation = 150 / 7;
@@ -124,13 +126,13 @@ public final class Constants {
     public static final boolean kFrontRightDriveAbsoluteEncoderReversed = false;
     public static final boolean kBackRightDriveAbsoluteEncoderReversed = false;
 
-    public static final double kFrontLeftModuleChassisAngularOffset = k2pi;
-    public static final double kBackLeftModuleChassisAngularOffset = k2pi;
-    public static final double kFrontRightModuleChassisAngularOffset = k2pi;
-    public static final double kBackRightModuleChassisAngularOffset = k2pi;
+    public static final double kFrontLeftModuleChassisAngularOffset = -Math.PI/2;
+    public static final double kBackLeftModuleChassisAngularOffset = Math.PI;
+    public static final double kFrontRightModuleChassisAngularOffset = 0;
+    public static final double kBackRightModuleChassisAngularOffset = Math.PI/2;
 
     public static final double kPhysicalMaxSpeedMetersPerSecond = 5;
-    public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 2 * k2pi;
+    public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 2 * Math.PI;
 
     public static final double kTeleDriveMaxSpeedMetersPerSecond = kPhysicalMaxSpeedMetersPerSecond / 4;
     public static final double kTeleDriveMaxAngularSpeedRadiansPerSecond = //
