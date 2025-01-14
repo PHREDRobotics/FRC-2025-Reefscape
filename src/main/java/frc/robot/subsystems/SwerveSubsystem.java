@@ -17,40 +17,24 @@ import frc.robot.controls.LogitechPro;
 
 public class SwerveSubsystem extends SubsystemBase {
   private final SwerveModule frontLeft = new SwerveModule(
-      DriveConstants.kFrontLeftDriveMotorPort,
-      DriveConstants.kFrontLeftTurningMotorPort,
-      DriveConstants.kFrontLeftDriveEncoderReversed,
-      DriveConstants.kFrontLeftTurningEncoderReversed,
-      DriveConstants.kFrontLeftModuleChassisAngularOffset,
-      DriveConstants.kFrontLeftDriveAbsoluteEncoderReversed,
-      DriveConstants.kFrontLeftDriveInverted);
+      DriveConstants.kFrontLeftDriveMotorCANId,
+      DriveConstants.kFrontLeftTurningMotorCANId,
+      DriveConstants.kFrontLeftModuleChassisAngularOffset);
 
   private final SwerveModule frontRight = new SwerveModule(
-      DriveConstants.kFrontRightDriveMotorPort,
-      DriveConstants.kFrontRightTurningMotorPort,
-      DriveConstants.kFrontRightDriveEncoderReversed,
-      DriveConstants.kFrontRightTurningEncoderReversed,
-      DriveConstants.kFrontRightModuleChassisAngularOffset,
-      DriveConstants.kFrontRightDriveAbsoluteEncoderReversed,
-      DriveConstants.kFrontRightDriveInverted);
+      DriveConstants.kFrontRightDriveMotorCANId,
+      DriveConstants.kFrontRightTurningMotorCANId,
+      DriveConstants.kFrontRightModuleChassisAngularOffset);
 
   public final SwerveModule backLeft = new SwerveModule(
-      DriveConstants.kBackLeftDriveMotorPort,
-      DriveConstants.kBackLeftTurningMotorPort,
-      DriveConstants.kBackLeftDriveEncoderReversed,
-      DriveConstants.kBackLeftTurningEncoderReversed,
-      DriveConstants.kBackLeftModuleChassisAngularOffset,
-      DriveConstants.kBackLeftDriveAbsoluteEncoderReversed,
-      DriveConstants.kBackLeftDriveInverted);
+      DriveConstants.kBackLeftDriveMotorCANId,
+      DriveConstants.kBackLeftTurningMotorCANId,
+      DriveConstants.kBackLeftModuleChassisAngularOffset);
 
   private final SwerveModule backRight = new SwerveModule(
-      DriveConstants.kBackRightDriveMotorPort,
-      DriveConstants.kBackRightTurningMotorPort,
-      DriveConstants.kBackRightDriveEncoderReversed,
-      DriveConstants.kBackRightTurningEncoderReversed,
-      DriveConstants.kBackRightModuleChassisAngularOffset,
-      DriveConstants.kBackRightDriveAbsoluteEncoderReversed,
-      DriveConstants.kBackRightDriveInverted);
+      DriveConstants.kBackRightDriveMotorCANId,
+      DriveConstants.kBackRightTurningMotorCANId,
+      DriveConstants.kBackRightModuleChassisAngularOffset);
 
   private final AHRS gyro = new AHRS(AHRS.NavXComType.kMXP_SPI);
   // private final SimDeviceSim simGyro = new SimDeviceSim();

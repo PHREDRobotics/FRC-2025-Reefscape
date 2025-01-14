@@ -17,6 +17,7 @@ import com.revrobotics.AbsoluteEncoder;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import frc.robot.Configs;
 import frc.robot.Constants;
 import frc.robot.Constants.ModuleConstants;
 
@@ -34,61 +35,34 @@ public class SwerveModule {
   private final RelativeEncoder driveEncoder;
   private final AbsoluteEncoder turningEncoder;
 
+  private final SparkClosedLoopController drivingClosedLoopController;
+  private final SparkClosedLoopController turningClosedLoopController;
+
   private double chassisAngularOffset = 0;
   private SwerveModuleState moduleDesiredState = new SwerveModuleState(0.0, new Rotation2d());
 
   public SwerveModule(
-      int driveMotorId,
-      int turningMotorId,
-      boolean driveMotorReversed,
-      boolean turningMotorReversed,
-      double moduleOffset,
-      boolean absoluteEncoderReversed,
-      boolean driveMotorInverted) {
+      int driveMotorCANId,
+      int turningMotorCANId,
+      double moduleAngularOffset) {
 
-
-      //  double drivingFactor = ModuleConstants.kWheelDiameterMeters * Math.PI
-        // / ModuleConstants.kDriveMotorGearRatio;
-
-
-    SparkMaxConfig driveConfig = new SparkMaxConfig();
-    driveSparkMax = new SparkMax(driveMotorId, MotorType.kBrushless);
+    // Driving SparkMax
+    driveSparkMax = new SparkMax(driveMotorCANId, MotorType.kBrushless);
     driveEncoder = driveSparkMax.getEncoder();
-    driveConfig
-        .inverted(driveMotorReversed)
-        .smartCurrentLimit(50)
-        .idleMode(IdleMode.kBrake);
-    driveConfig.encoder
+    drivingClosedLoopController = driveSparkMax.getClosedLoopController();
 
-        //either this or the turning one needs fixed
-        .positionConversionFactor(ModuleConstants.kDriveEncoderRot2Meter)
-        .velocityConversionFactor(6);
-    driveConfig.closedLoop
-        .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-        .pid(ModuleConstants.kDrivingP, ModuleConstants.kDrivingI, ModuleConstants.kDrivingD);
+    driveSparkMax.configure(Configs.MAXSwerveModule.drivingConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
-    driveSparkMax.configure(driveConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-
-    SparkMaxConfig turnConfig = new SparkMaxConfig();
-    turningSparkMax = new SparkMax(turningMotorId, MotorType.kBrushless);
+    // Turning SparkMax
+    turningSparkMax = new SparkMax(turningMotorCANId, MotorType.kBrushless);
     turningEncoder = turningSparkMax.getAbsoluteEncoder();
-    turnConfig
-        .inverted(driveMotorReversed)
-        .idleMode(IdleMode.kBrake);
-    turnConfig.absoluteEncoder
+    turningClosedLoopController = turningSparkMax.getClosedLoopController();
 
-        //either this or the driving one needs fixed
-        .positionConversionFactor(moduleOffset)
-        .velocityConversionFactor(10);
-    turnConfig.closedLoop
-        .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
-        .pid(ModuleConstants.kTurningP, ModuleConstants.kTurningI, ModuleConstants.kTurningD);
+    turningSparkMax.configure(Configs.MAXSwerveModule.turningConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
-    turningSparkMax.configure(turnConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-
-    chassisAngularOffset = moduleOffset;
+    chassisAngularOffset = moduleAngularOffset;
     moduleDesiredState.angle = new Rotation2d(turningEncoder.getPosition());
-    driveSparkMax.getEncoder().setPosition(0);
+    driveEncoder.setPosition(0);
 
   }
 
@@ -132,7 +106,7 @@ public class SwerveModule {
 
   public SwerveModuleState getState() {
     return new SwerveModuleState(getDriveVelocity(),
-        new Rotation2d(turningSparkMax.getAbsoluteEncoder().getPosition() - chassisAngularOffset));
+        new Rotation2d(turningEncoder.getPosition() - chassisAngularOffset));
   }
 
   public void setDesiredState(SwerveModuleState desiredState) {
@@ -141,17 +115,15 @@ public class SwerveModule {
     correctedDesiredState.angle = desiredState.angle.plus(Rotation2d.fromRadians(chassisAngularOffset));
     // changed fromRadians to fromDegrees
 
-    SwerveModuleState optimizedDesiredState = SwerveModuleState.optimize(correctedDesiredState,
-        new Rotation2d(turningEncoder.getPosition()));
+     // Optimize the reference state to avoid spinning further than 90 degrees.
+     correctedDesiredState.optimize(new Rotation2d(turningEncoder.getPosition()));
 
-    driveSparkMax.getClosedLoopController().setReference(optimizedDesiredState.speedMetersPerSecond,
+    driveSparkMax.getClosedLoopController().setReference(correctedDesiredState.speedMetersPerSecond,
         SparkMax.ControlType.kVelocity);
-    turningSparkMax.getClosedLoopController().setReference(optimizedDesiredState.angle.getRadians(),
+    turningSparkMax.getClosedLoopController().setReference(correctedDesiredState.angle.getRadians(),
         SparkMax.ControlType.kPosition);
-    // changed getRadians to getDegrees
-
-    // MIGHT OF DONE A THING UP THERE IM NOT SURE HAVENT BEEN ABLE TO TEST
-    // YET!!!!!!!!
+    
+    moduleDesiredState = desiredState;
   }
 
   public void stop() {

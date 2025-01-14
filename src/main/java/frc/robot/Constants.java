@@ -28,7 +28,20 @@ public final class Constants {
     public static final double kDriveEncoderRot2Meter = kDriveMotorGearRatio * Math.PI * kWheelDiameterMeters;
     public static final double kDriveEncoderRPM2MeterPerSec = kDriveEncoderRot2Meter / 60;
     public static final double kDriveWheelFreeRps = NeoMotorConstants.kFreeSpeedRpm / 60;
-
+    
+    
+    // The MAXSwerve module can be configured with one of three pinion gears: 12T,
+    // 13T, or 14T. This changes the drive speed of the module (a pinion gear with
+    // more teeth will result in a robot that drives faster).
+    public static final int kDrivingMotorPinionTeeth = 14;
+    // Calculations required for driving motor conversion factors and feed forward
+    public static final double kDrivingMotorFreeSpeedRps = NeoMotorConstants.kFreeSpeedRpm / 60;
+    public static final double kWheelCircumferenceMeters = kWheelDiameterMeters * Math.PI;
+    // 45 teeth on the wheel's bevel gear, 22 teeth on the first-stage spur gear, 15
+    // teeth on the bevel pinion
+    public static final double kDrivingMotorReduction = (45.0 * 22) / (kDrivingMotorPinionTeeth * 15);
+    public static final double kDriveWheelFreeSpeedRps = (kDrivingMotorFreeSpeedRps * kWheelCircumferenceMeters)
+        / kDrivingMotorReduction;
     // public static final double kTurningEncoderRot2Rad = kTurningMotorGearRatio;
     public static final int kTurnMotorEncoderTicksPerRotation = 42;
     public static final double kTurningMotorRotationPerSteerRotation = 150 / 7;
@@ -76,15 +89,15 @@ public final class Constants {
         new Translation2d(-kWheelBase / 2, -kTrackWidth / 2),
         new Translation2d(-kWheelBase / 2, kTrackWidth / 2));
 
-    public static final int kBackLeftDriveMotorPort = 21;
-    public static final int kFrontLeftDriveMotorPort = 11;
-    public static final int kFrontRightDriveMotorPort = 16;
-    public static final int kBackRightDriveMotorPort = 26;
+    public static final int kBackLeftDriveMotorCANId = 21;
+    public static final int kFrontLeftDriveMotorCANId = 11;
+    public static final int kFrontRightDriveMotorCANId = 16;
+    public static final int kBackRightDriveMotorCANId = 26;
 
-    public static final int kBackLeftTurningMotorPort = 22;
-    public static final int kFrontLeftTurningMotorPort = 12;
-    public static final int kFrontRightTurningMotorPort = 17;
-    public static final int kBackRightTurningMotorPort = 27;
+    public static final int kBackLeftTurningMotorCANId = 22;
+    public static final int kFrontLeftTurningMotorCANId = 12;
+    public static final int kFrontRightTurningMotorCANId = 17;
+    public static final int kBackRightTurningMotorCANId = 27;
 
     public static final boolean kFrontLeftTurningEncoderReversed = false;
     public static final boolean kBackLeftTurningEncoderReversed = false;
