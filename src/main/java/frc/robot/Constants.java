@@ -116,21 +116,21 @@ public final class Constants {
     public static final boolean kFrontRightDriveInverted = true;
     public static final boolean kBackRightDriveInverted = true;
 
-    // public static final int kFrontLeftDriveAbsoluteEncoderPort = 12;
-    // public static final int kBackLeftDriveAbsoluteEncoderPort = 22;
-    // public static final int kFrontRightDriveAbsoluteEncoderPort = 17;
-    // public static final int kBackRightDriveAbsoluteEncoderPort = 27;
+    public static final double kFrontLeftModuleChassisAngularOffset = Math.PI;
+    public static final double kBackLeftModuleChassisAngularOffset = Math.PI;
+    public static final double kFrontRightModuleChassisAngularOffset = Math.PI;
+    public static final double kBackRightModuleChassisAngularOffset = Math.PI;
 
     public static final boolean kFrontLeftDriveAbsoluteEncoderReversed = false;
     public static final boolean kBackLeftDriveAbsoluteEncoderReversed = false;
     public static final boolean kFrontRightDriveAbsoluteEncoderReversed = false;
     public static final boolean kBackRightDriveAbsoluteEncoderReversed = false;
-
+/*
     public static final double kFrontLeftModuleChassisAngularOffset = -Math.PI/2;
     public static final double kBackLeftModuleChassisAngularOffset = Math.PI;
     public static final double kFrontRightModuleChassisAngularOffset = 0;
     public static final double kBackRightModuleChassisAngularOffset = Math.PI/2;
-
+*/
     public static final double kPhysicalMaxSpeedMetersPerSecond = 5;
     public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 2 * Math.PI;
 

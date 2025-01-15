@@ -40,7 +40,6 @@ public class SwerveSubsystem extends SubsystemBase {
   // private final SimDeviceSim simGyro = new SimDeviceSim();
   private final Field2d m_field = new Field2d();
 
-  private final LogitechPro m_joyStick;
 
   // private final SwerveDriveOdometry odometer = new
   // SwerveDriveOdometry(DriveConstants.kDriveKinematics,
@@ -59,8 +58,7 @@ public class SwerveSubsystem extends SubsystemBase {
     };
   }
 
-  public SwerveSubsystem(LogitechPro joystick) {
-    m_joyStick = joystick;
+  public SwerveSubsystem() {
     SmartDashboard.putData("Field", m_field);
     new Thread(() -> {
       try {
@@ -116,14 +114,13 @@ public class SwerveSubsystem extends SubsystemBase {
   public void periodic() {
     odometer.update(getRotation2d(), getModulePositions());
 
-    SmartDashboard.putNumber("throttle", m_joyStick.getThrottl());
 
     SmartDashboard.putString("Robot Heading (Rotation2d)", gyro.getRotation2d().toString());
     SmartDashboard.putNumber("Robot Heading (Degrees)", getHeading());
-    SmartDashboard.putNumber("Front Left Turning Position", frontLeft.getTurningPosition() * (180 / Math.PI));
-    SmartDashboard.putNumber("Front Right Turning Position", frontRight.getTurningPosition() * (180 / Math.PI));
-    SmartDashboard.putNumber("Back Left Turning Position", backLeft.getTurningPosition() * (180 / Math.PI));
-    SmartDashboard.putNumber("Back Right Turning Position", backRight.getTurningPosition() * (180 / Math.PI));
+    SmartDashboard.putNumber("Front Left Turning Position", frontLeft.getTurningPosition());
+    SmartDashboard.putNumber("Front Right Turning Position", frontRight.getTurningPosition());
+    SmartDashboard.putNumber("Back Left Turning Position", backLeft.getTurningPosition());
+    SmartDashboard.putNumber("Back Right Turning Position", backRight.getTurningPosition());
 
     SmartDashboard.putString("Robot Location", getPose().getTranslation().toString());
 

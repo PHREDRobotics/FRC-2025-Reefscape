@@ -4,14 +4,8 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.spark.SparkAbsoluteEncoder;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.config.SparkMaxConfig;
-import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
-import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
-
-import java.io.ObjectInputFilter.Config;
 
 import com.revrobotics.AbsoluteEncoder;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -19,7 +13,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.robot.Configs;
 import frc.robot.Constants;
-import frc.robot.Constants.ModuleConstants;
 
 /**
  * Constructs a MAXSwerveModule and configures the driving and turning motor,
@@ -51,14 +44,16 @@ public class SwerveModule {
     driveEncoder = driveSparkMax.getEncoder();
     drivingClosedLoopController = driveSparkMax.getClosedLoopController();
 
-    driveSparkMax.configure(Configs.MAXSwerveModule.drivingConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    driveSparkMax.configure(Configs.MAXSwerveModule.drivingConfig, ResetMode.kResetSafeParameters,
+        PersistMode.kPersistParameters);
 
     // Turning SparkMax
     turningSparkMax = new SparkMax(turningMotorCANId, MotorType.kBrushless);
     turningEncoder = turningSparkMax.getAbsoluteEncoder();
     turningClosedLoopController = turningSparkMax.getClosedLoopController();
 
-    turningSparkMax.configure(Configs.MAXSwerveModule.turningConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    turningSparkMax.configure(Configs.MAXSwerveModule.turningConfig, ResetMode.kResetSafeParameters,
+        PersistMode.kPersistParameters);
 
     chassisAngularOffset = moduleAngularOffset;
     moduleDesiredState.angle = new Rotation2d(turningEncoder.getPosition());
@@ -115,14 +110,14 @@ public class SwerveModule {
     correctedDesiredState.angle = desiredState.angle.plus(Rotation2d.fromRadians(chassisAngularOffset));
     // changed fromRadians to fromDegrees
 
-     // Optimize the reference state to avoid spinning further than 90 degrees.
-     correctedDesiredState.optimize(new Rotation2d(turningEncoder.getPosition()));
+    // Optimize the reference state to avoid spinning further than 90 degrees.
+    correctedDesiredState.optimize(new Rotation2d(turningEncoder.getPosition()));
 
     driveSparkMax.getClosedLoopController().setReference(correctedDesiredState.speedMetersPerSecond,
         SparkMax.ControlType.kVelocity);
     turningSparkMax.getClosedLoopController().setReference(correctedDesiredState.angle.getRadians(),
         SparkMax.ControlType.kPosition);
-    
+
     moduleDesiredState = desiredState;
   }
 

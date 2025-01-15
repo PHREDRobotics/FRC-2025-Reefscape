@@ -43,7 +43,7 @@ public class RobotContainer {
         // MotorTestSubsystem();
         private final LogitechPro joyStick = new LogitechPro(1);
 
-        private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem(joyStick);
+        private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
 
         // private final MotorTestSubsystem motorTestSubsystem = new
         // MotorTestSubsystem();
@@ -101,14 +101,14 @@ public class RobotContainer {
                 // Set default commands
 
 
-                swerveSubsystem.setDefaultCommand(new SwerveJoystickCmd(
+         /*       swerveSubsystem.setDefaultCommand(new SwerveJoystickCmd(
                                 swerveSubsystem,
                                 () -> -joyStick.getPitch(),
                                 () -> -joyStick.getRoll(),
                                 () -> -joyStick.getYaw(),
                                 () -> joyStick.getThrottl(),
                                 () -> joyStick.getTrigger()));
-     
+     */
                                 
 
                 // Configure mechanical triggers
