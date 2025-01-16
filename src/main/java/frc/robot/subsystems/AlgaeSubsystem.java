@@ -10,15 +10,15 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class AlgaeSubsystem extends SubsystemBase {
     private static final Timer timer = new Timer();
-    public SparkMax leftAlgae = new SparkMax(ShooterConstants.kLeftShooterControllerPort, MotorType.kBrushless);
-    public SparkMax rightAlgae = new SparkMax(ShooterConstants.kRightShooterControllerPort, MotorType.kBrushless);
+    public SparkMax leftAlgaeSparkMax = new SparkMax(ShooterConstants.kLeftShooterControllerPort, MotorType.kBrushless);
+    public SparkMax rightAlgaeSparkMax = new SparkMax(ShooterConstants.kRightShooterControllerPort, MotorType.kBrushless);
 
     public double algaeSpeed = ShooterConstants.kShooterSpeed;
 
     public void Intake() {
-        // timer.reset();
-        leftAlgae.set(speedConvert(algaeSpeed));
-        rightAlgae.set(speedConvert(algaeSpeed));
+        timer.reset();
+        leftAlgaeSparkMax.set(speedConvert(algaeSpeed));
+        rightAlgaeSparkMax.set(speedConvert(algaeSpeed));
     }
 
     public double speedConvert(double inSpeed) {
@@ -29,14 +29,14 @@ public class AlgaeSubsystem extends SubsystemBase {
     }
     
     public void stopIntake() {
-        leftAlgae.set(0);
-        rightAlgae.set(0);
+        leftAlgaeSparkMax.set(0);
+        rightAlgaeSparkMax.set(0);
     }
 
-    // public static boolean shooterIsTimeDone() {
-    //     return timer.hasElapsed(ShooterConstants.kShooterTime);
-    // }
-    // Timer doesn't do much currently.
+    public static boolean shooterIsTimeDone() {
+        return timer.hasElapsed(ShooterConstants.kShooterTime);
+    }
+    // Timer doesn't do much currently, but we'll still reset it for command use.
 
     @Override
     public void periodic() {

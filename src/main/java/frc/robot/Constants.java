@@ -155,6 +155,9 @@ public final class Constants {
 
   }
 
+  /**
+   * ShooterConstants is now for algae, permanent rename?
+   */
   public static final class ShooterConstants {
     public static final int kLeftShooterControllerPort = 41;
     public static final int kRightShooterControllerPort = 42;
