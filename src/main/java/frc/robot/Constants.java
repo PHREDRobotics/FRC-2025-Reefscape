@@ -158,6 +158,7 @@ public final class Constants {
   /**
    * ShooterConstants is now for algae, permanent rename?
    */
+  /*
   public static final class ShooterConstants {
     public static final int kLeftShooterControllerPort = 41;
     public static final int kRightShooterControllerPort = 42;
@@ -165,6 +166,14 @@ public final class Constants {
     public static final double kShooterSpeed = 0.75;
     public static final double kShooterTime = 1.5;
 
+  } */
+
+  public static final class AlgaeConstants {
+    public static final int kLeftAlgaeControllerPort = 8;
+    public static final int kRightAlgaeControllerPort = 9;
+    public static final int kXBtn = Button.kX.value;
+    public static final double kAlgaeSpeed = 0.75;
+    public static final double kAlgaeTime = 1.5;
   }
 
   /**

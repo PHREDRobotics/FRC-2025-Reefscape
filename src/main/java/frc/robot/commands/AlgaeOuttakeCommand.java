@@ -2,31 +2,30 @@ package frc.robot.commands;
 
 import frc.robot.Constants;
 import frc.robot.subsystems.AlgaeSubsystem;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class AlgaeCommand extends Command {
+public class AlgaeOuttakeCommand extends Command {
     private final AlgaeSubsystem cmdSubsystem;
+    
 
     /**
-     * Creates a new command
      * 
-     * @param subsystem The subsystem used by this command
+     * @param subsystem
      */
-    public AlgaeCommand(AlgaeSubsystem subsystem) {
+    public AlgaeOuttakeCommand(AlgaeSubsystem subsystem) {
         cmdSubsystem = subsystem;
         addRequirements(subsystem);
     }
 
     @Override
     public void initialize() {
-        cmdSubsystem.Intake();
+        cmdSubsystem.Outtake();
     }
 
     @Override
     public void execute() {
-        // Periodically runs; nothing for now.
+        // nothing for now, this will run periodically..
     }
 
     @Override
@@ -36,9 +35,6 @@ public class AlgaeCommand extends Command {
 
     @Override
     public boolean isFinished() {
-        return AlgaeSubsystem.shooterIsTimeDone();
-         /**
-          * The AlgaeSubsystem has shooterIsTimeDone() which returns true or false based on how long it should take.
-          */
+        return AlgaeSubsystem.algaeIsTimeDone();
     }
-} 
+}
