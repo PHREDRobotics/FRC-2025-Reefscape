@@ -253,12 +253,13 @@ public final class Constants {
     public static final double kStageHeightInches = 47.5;
   }
 
-  public static final class IntakeConstants {
-    public static final int kLeftIntakeControllerPort = 31;
-    public static final int kRightIntakeControllerPort = 32;
-
-    public static final double kIntakeSpeed = 0.25;
-    public static final double kOuttakeSpeed = 0.6;
+  public static final class CoralConstants {
+    
+  public static final int kCoralSparkMaxCanID = 6;
+  public static final double kCoralIntakeSpeed = 1.0;
+  public static final double kCoralIntakeTime = 1.0;
+  public static final double kCoralOuttakeSpeed = 1.0;
+  public static final double kCoralOuttakeTime = 1.0;
   }
 
 }
