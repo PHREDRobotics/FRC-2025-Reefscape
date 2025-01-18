@@ -31,7 +31,7 @@ public class AlgaeIntakeCommand extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        cmdSubsystem.stopIntake();
+        cmdSubsystem.stop();
     }
 
     @Override

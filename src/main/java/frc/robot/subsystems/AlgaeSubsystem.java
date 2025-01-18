@@ -36,7 +36,7 @@ public class AlgaeSubsystem extends SubsystemBase {
         return inSpeed;
     }
     
-    public void stopIntake() {
+    public void stop() {
         leftAlgaeSparkMax.set(0);
         rightAlgaeSparkMax.set(0);
     }
