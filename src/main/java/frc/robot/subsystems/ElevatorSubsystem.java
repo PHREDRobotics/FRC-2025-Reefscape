@@ -112,6 +112,13 @@ public class ElevatorSubsystem extends SubsystemBase {
         rightElevator.set(vroom);
     }
 
+    public void moveToPosition(double position) {
+        // goal = new TrapezoidProfile.State(position, 0);
+        // setpoint = profile.calculate(kDt, setpoint, goal);
+        // armMotor.setVoltage(pidController.calculate(armEncoder.getPosition(), setpoint.position)
+        //         + feedforward.calculate(Math.toRadians(armEncoder.getPosition()), setpoint.velocity));
+    }
+
    // public boolean limitSwitchTriggered() {
      //   return m_limit_switch.get();
     //}
