@@ -1,9 +1,7 @@
 package frc.robot.commands;
 
-import frc.robot.Constants;
 import frc.robot.subsystems.AlgaeSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class AlgaeOuttakeCommand extends Command {
     private final AlgaeSubsystem cmdSubsystem;
