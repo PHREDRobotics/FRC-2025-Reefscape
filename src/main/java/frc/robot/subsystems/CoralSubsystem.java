@@ -4,60 +4,72 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.CoralConstants;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import java.util.concurrent.TimeUnit;
 import edu.wpi.first.wpilibj.Timer;
-import javax.print.attribute.standard.RequestingUserName;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLimitSwitch;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 public class CoralSubsystem extends SubsystemBase {
-    private static final Timer timer = new Timer();
-    public SparkMax coralMotorSparkMax = new SparkMax(CoralConstants.kCoralSparkMaxCanID,MotorType.kBrushless);
-    //public SparkLimitSwitch m_forwardLimit = coralMotorSparkMax.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen);
+  private static final Timer timer = new Timer();
+  public SparkMax coralMotorSparkMax = new SparkMax(CoralConstants.kCoralSparkMaxCanID, MotorType.kBrushless);
+  public SparkLimitSwitch forwardLimit = coralMotorSparkMax.getForwardLimitSwitch();
 
-    public double intake_speed = CoralConstants.kCoralIntakeSpeed;
-    public double outtake_speed = CoralConstants.kCoralOuttakeSpeed;
+  public double intakeSpeed = CoralConstants.kCoralIntakeSpeed;
+  public double outtakeSpeed = CoralConstants.kCoralOuttakeSpeed;
 
-    public CoralSubsystem() { 
-       super();
-       // SmartDashboard.putnumber("Outtake Speed", kcoralouttakeSpeed)
-    }
+  public CoralSubsystem() {
+    super();
+    SmartDashboard.putString("Outtake Speed: ", String.valueOf(outtakeSpeed));
+  }
 
-    public void Outtake(){
+  public void Outtake() {
     timer.reset();
-    coralMotorSparkMax.set(speedConvert(-outtake_speed));
+    coralMotorSparkMax.set(speedConvert(-outtakeSpeed));
     timer.start();
-    }
+  }
 
-    public double speedConvert(double inSpeed) {
-        if (inSpeed < 0.2 && inSpeed > -0.2) {
-            return 0.0;
+  public double speedConvert(double inSpeed) {
+    if (inSpeed < 0.2 && inSpeed > -0.2) {
+      return 0.0;
+    } else {
+      return inSpeed;
     }
-    else{
-        return inSpeed;
-    }
-}
-    
+  }
+
   public void stopIntake() {
     coralMotorSparkMax.set(0);
   }
+
   public void pickUpCoral() {
     // This will stop when the beam in our beam break sensor is broken
 
-    coralMotorSparkMax.set(outtake_speed);
+    coralMotorSparkMax.set(outtakeSpeed);
   }
 
-  //public boolean isCoralLoaded() {
-  //  return forwardLimit.isPressed() || SmartDashboard.getBoolean("Manual Override Press", false);
- // }
- public static boolean outtakeIsTimeDone() {
+  public boolean isCoralLoaded() {
+    return forwardLimit.isPressed() || SmartDashboard.getBoolean("Manual Override Press", false);
+  }
+
+  public static boolean outtakeIsTimeDone() {
     return timer.hasElapsed(Constants.GrabberConstants.kOuttakeTime);
 
   }
- /* public void ejectToShooter() {
-    // This will be slower than ejectToAmp
 
-  }*/
-  
+  @Override
+  public void periodic() {
+    SmartDashboard.putBoolean("Pressed?", isCoralLoaded());
+    SmartDashboard.putBoolean("Manual Override Press", SmartDashboard.getBoolean("Manual Override Press", false));
+    
+    
+
+  // Slider things VARIABLES
+  outtakeSpeed=SmartDashboard.getNumber("Outtake Speed",outtakeSpeed);
+  intakeSpeed=SmartDashboard.getNumber("Intake Speed",intakeSpeed);
+  SmartDashboard.putNumber("Outtake Speed",outtakeSpeed);
+  SmartDashboard.putNumber("Intake Speed",intakeSpeed);
+  // This method will be called once per scheduler run
+  // We will have a pull in fast and slow and a push out fast and slow
+  // When we pull in we will use the beam break sensor to stop the motor
+  }
+
 }
