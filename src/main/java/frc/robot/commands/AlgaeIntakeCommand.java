@@ -36,9 +36,9 @@ public class AlgaeIntakeCommand extends Command {
 
     @Override
     public boolean isFinished() {
-        return AlgaeSubsystem.algaeIsTimeDone();
+        return cmdSubsystem.isAlgaeLoaded();
          /**
-          * The AlgaeSubsystem has shooterIsTimeDone() which returns true or false based on how long it should take.
+          * isFinished() will return isAlgaeLoaded() which checks if the limit switch for the algae is pressed.
           */
     }
 } 

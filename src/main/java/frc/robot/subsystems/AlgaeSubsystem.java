@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.Constants.AlgaeConstants;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.SparkLimitSwitch;
 import com.revrobotics.spark.SparkMax;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -12,6 +13,7 @@ public class AlgaeSubsystem extends SubsystemBase {
     private static final Timer timer = new Timer();
     public SparkMax leftAlgaeSparkMax = new SparkMax(AlgaeConstants.kLeftAlgaeControllerPort, MotorType.kBrushless);
     public SparkMax rightAlgaeSparkMax = new SparkMax(AlgaeConstants.kRightAlgaeControllerPort, MotorType.kBrushless);
+    public SparkLimitSwitch forwardLimit = leftAlgaeSparkMax.getForwardLimitSwitch();
 
     public double algaeSpeed = AlgaeConstants.kAlgaeSpeed;
 
@@ -39,10 +41,13 @@ public class AlgaeSubsystem extends SubsystemBase {
         rightAlgaeSparkMax.set(0);
     }
 
+    public boolean isAlgaeLoaded() {
+        return forwardLimit.isPressed() || SmartDashboard.getBoolean("Manual override press", false);
+    }
+
     public static boolean algaeIsTimeDone() {
         return timer.hasElapsed(AlgaeConstants.kAlgaeTime);
     }
-    // Timer doesn't do much currently, but we'll still reset it for command use.
 
     @Override
     public void periodic() {
