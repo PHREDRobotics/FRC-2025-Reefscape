@@ -191,6 +191,24 @@ public final class Constants {
     public static final double kAlgaeTime = 1.5;
   }
 
+  //Names and heights are not final
+  public static final class ElevatorConstants{
+    //Will need to play with these number some more
+    public static final double kP = 0.6;
+    public static final double kI = 0.0;
+    public static final double kD = 0.0;
+    //not sure if it is actually a limit switch or not
+    public static final int kElevatorLimitSwitchPort = 0;
+    public static final int kRightElevatorPort = 0;
+    public static final int kLeftElevatorPort = 0;
+    public static final double kProcessor = 0;
+    public static final double kLevel1 = 1;
+    public static final double kLevel2 = 2;
+    public static final double kLevel3 = 3;
+    public static final double kLevel4 = 4;
+    public static final double kHumanPlayerStationHeight = 5;
+  }
+
   /**
    * Constants for autonomous
    */
