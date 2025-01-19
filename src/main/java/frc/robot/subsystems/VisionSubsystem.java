@@ -5,18 +5,21 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.subsystems.LimelightHelpers;
 
 public class VisionSubsystem extends SubsystemBase {
   /** Creates a new ExampleSubsystem. */
   public boolean m_LimelightHasValidTarget = false;
   public boolean m_IsLimeLightCentered = false;
   NetworkTable m_table = NetworkTableInstance.getDefault().getTable("limelight");
-  //double tv = m_table.getEntry("tv").getDouble(0);
+  // double tv = m_table.getEntry("tv").getDouble(0);
   double tx = m_table.getEntry("tx").getDouble(0);
   double ty = m_table.getEntry("ty").getDouble(0);
   double ta = m_table.getEntry("ta").getDouble(0);
@@ -69,11 +72,12 @@ public class VisionSubsystem extends SubsystemBase {
     double d = (Constants.kAmpOrSourceHeightInches - Constants.kLimelightLensHeightInches)
         / Math.tan(angleToGoalRadians);
     return d;
-    //14.75 against amp
-    //27.1 = 18.75
-    //36=32
-    //47.8~=49.75
+    // 14.75 against amp
+    // 27.1 = 18.75
+    // 36=32
+    // 47.8~=49.75
   }
+
   public double getRoughTargetDistance() {
     double angleToGoalDegrees = Constants.kLimelightMountAngleDegrees + ty;
     double angleToGoalRadians = angleToGoalDegrees * (3.14159 / 180.0);
@@ -81,13 +85,14 @@ public class VisionSubsystem extends SubsystemBase {
     double d = hyp * Math.cos(angleToGoalRadians);
     return d;
   }
-public double getTargetArea(){
-  return ta;
-}
 
-public double getTargetXDegrees(){
-  return tx;
-}
+  public double getTargetArea() {
+    return ta;
+  }
+
+  public double getTargetXDegrees() {
+    return tx;
+  }
 
   public void goToDistance(double distance) {
 
@@ -123,7 +128,7 @@ public double getTargetXDegrees(){
   @Override
   public void periodic() {
     m_table = NetworkTableInstance.getDefault().getTable("limelight-phred");
-    //tv = m_table.getEntry("tv").getDouble(0);
+    // tv = m_table.getEntry("tv").getDouble(0);
     tx = m_table.getEntry("tx").getDouble(0);
     ty = m_table.getEntry("ty").getDouble(0);
     ta = m_table.getEntry("ta").getDouble(0);
@@ -135,10 +140,10 @@ public double getTargetXDegrees(){
     SmartDashboard.putNumber("Limelight x value.", tx);
     SmartDashboard.putNumber("Estimated Distance", getTargetDistance());
     SmartDashboard.putNumber("Estimated Rough Distance", getRoughTargetDistance());
-    //SmartDashboard.putNumber("Limelight v value.", tv);
+    // SmartDashboard.putNumber("Limelight v value.", tv);
     SmartDashboard.putBoolean("Is the target in range?", m_LimelightHasValidTarget);
     SmartDashboard.putBoolean("Is the target centered", m_IsLimeLightCentered);
-  
+
     // This method will be called once per scheduler run
     // It should be able to recognize the april tags, which allows us to push a
     // button so it lines itself
@@ -148,6 +153,7 @@ public double getTargetXDegrees(){
 
     // now get the network table that corresponds to the SmartDashboard class of
     // WPILib
+
   }
 
   @Override

@@ -4,11 +4,14 @@ package frc.robot.subsystems;
 import com.studica.frc.AHRS;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -62,9 +65,10 @@ public class SwerveSubsystem extends SubsystemBase {
   // SwerveDriveOdometry(DriveConstants.kDriveKinematics,
   // new Rotation2d(), getModulePositions());
 
-  SwerveDriveOdometry odometer = new SwerveDriveOdometry(
-      DriveConstants.kDriveKinematics, gyro.getRotation2d(),
-      getModulePositions(), new Pose2d(0.0, 0.0, new Rotation2d()));
+  // Old Odometer
+  // SwerveDriveOdometry odometer = new SwerveDriveOdometry(
+  //     DriveConstants.kDriveKinematics, gyro.getRotation2d(),
+  //     getModulePositions(), new Pose2d(0.0, 0.0, new Rotation2d()));
 
   public SwerveModulePosition[] getModulePositions() {
     return new SwerveModulePosition[] {
@@ -74,6 +78,20 @@ public class SwerveSubsystem extends SubsystemBase {
         backRight.getPosition()
     };
   }
+
+  // Copy Pasted code to allow MegaTag2 Limelight stuff 👍
+  /*
+   * Here we use SwerveDrivePoseEstimator so that we can fuse odometry readings.
+   * The numbers used
+   * below are robot specific, and should be tuned.
+   */
+  private final SwerveDrivePoseEstimator m_poseEstimator = new SwerveDrivePoseEstimator(
+      DriveConstants.kDriveKinematics,
+      gyro.getRotation2d(),
+      getModulePositions(),
+      new Pose2d(),
+      VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5)),
+      VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(30)));
 
   public SwerveSubsystem(LogitechPro joystick) {
     m_joyStick = joystick;
@@ -117,20 +135,91 @@ public class SwerveSubsystem extends SubsystemBase {
   public Rotation2d getRotation2d() {
     return Rotation2d.fromDegrees(getHeading());
   }
+  // old odometer
+  // public Pose2d getPose() {
+  //   return odometer.getPoseMeters();
+  // }
+
+  // public void resetOdometry(Pose2d pose) {
+  //   odometer.resetPosition(getRotation2d(), getModulePositions(), getPose());
+  // }
 
   public Pose2d getPose() {
-    return odometer.getPoseMeters();
+    return m_poseEstimator.getEstimatedPosition();
   }
 
   public void resetOdometry(Pose2d pose) {
-    odometer.resetPosition(getRotation2d(), getModulePositions(), getPose());
+    m_poseEstimator.resetPosition(getRotation2d(), getModulePositions(), pose);
+  }
+
+  /** Updates the field relative position of the robot. */
+  public void updateOdometry() {
+    m_poseEstimator.update(
+        gyro.getRotation2d(),
+        new SwerveModulePosition[] {
+            frontLeft.getPosition(),
+            frontRight.getPosition(),
+            backLeft.getPosition(),
+            backRight.getPosition()
+        });
+    boolean useMegaTag2 = true; // set to false to use MegaTag1
+    boolean doRejectUpdate = false;
+    // if(useMegaTag2 == false)
+    // {
+    // LimelightHelpers.PoseEstimate mt1 =
+    // LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight");
+
+    // if(mt1.tagCount == 1 && mt1.rawFiducials.length == 1)
+    // {
+    // if(mt1.rawFiducials[0].ambiguity > .7)
+    // {
+    // doRejectUpdate = true;
+    // }
+    // if(mt1.rawFiducials[0].distToCamera > 3)
+    // {
+    // doRejectUpdate = true;
+    // }
+    // }
+    // if(mt1.tagCount == 0)
+    // {
+    // doRejectUpdate = true;
+    // }
+
+    // if(!doRejectUpdate)
+    // {
+    // m_poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.5,.5,9999999));
+    // m_poseEstimator.addVisionMeasurement(
+    // mt1.pose,
+    // mt1.timestampSeconds);
+    // }
+    // }
+    // else
+    if (useMegaTag2 == true) {
+      LimelightHelpers.SetRobotOrientation("limelight",
+          m_poseEstimator.getEstimatedPosition().getRotation().getDegrees(), 0, 0, 0, 0, 0);
+      LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
+      if (Math.abs(gyro.getRate()) > 720) // if our angular velocity is greater than 720 degrees per second, ignore vision updates
+      {
+        doRejectUpdate = true;
+      }
+      if (mt2.tagCount == 0) {
+        doRejectUpdate = true;
+      }
+      if (!doRejectUpdate) {
+        m_poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.7, .7, 9999999));
+        m_poseEstimator.addVisionMeasurement(
+            mt2.pose,
+            mt2.timestampSeconds);
+      }
+    }
   }
 
   // -------------------------------------------------
   // ------------- Update Dashboard ----------------
   @Override
   public void periodic() {
-    odometer.update(getRotation2d(), getModulePositions());
+    // odometer.update(getRotation2d(), getModulePositions());
+    updateOdometry();
 
     SmartDashboard.putNumber("throttle", m_joyStick.getThrottl());
 
@@ -148,8 +237,9 @@ public class SwerveSubsystem extends SubsystemBase {
 
   @Override
   public void simulationPeriodic() {
-    odometer.update(new Rotation2d(-Math.PI), getModulePositions());
-    m_field.setRobotPose(odometer.getPoseMeters());
+    // Not sure how to port this to the new odometer
+    //odometer.update(new Rotation2d(-Math.PI), getModulePositions());
+    //m_field.setRobotPose(odometer.getPoseMeters());
   }
 
   public void initModules() {
