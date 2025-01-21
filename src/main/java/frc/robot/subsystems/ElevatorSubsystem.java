@@ -7,8 +7,12 @@ import frc.robot.Constants.ElevatorConstants;
 import java.util.function.DoubleSupplier;
 
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.spark.SparkBase;
+import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.config.ClosedLoopConfig;
+import com.revrobotics.spark.config.ClosedLoopConfigAccessor;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
@@ -25,6 +29,8 @@ public class ElevatorSubsystem extends SubsystemBase {
     private SparkMax rightElevator;
     private RelativeEncoder leftEncoder;
     private RelativeEncoder rightEncoder;
+    private SparkClosedLoopController m_LeftpidController;
+    private SparkClosedLoopController m_RightpidController;
     private double kS;
     private double kG;
     private double kV;
@@ -35,41 +41,25 @@ public class ElevatorSubsystem extends SubsystemBase {
     private double max_velocity;
     private double max_acceleration;
     private double voltage;
-    private PIDController pidController;
+    private SparkBase sparkClosedLoopController;
     private TrapezoidProfile profile;
     private TrapezoidProfile.State goal;
     private TrapezoidProfile.State setpoint;
 
-
     public ElevatorSubsystem() {
         leftElevator = new SparkMax(Constants.LiftConstants.kLeftLiftControllerPort, MotorType.kBrushless);
         rightElevator = new SparkMax(Constants.LiftConstants.kRightLiftControllerPort, MotorType.kBrushless);
+
         leftEncoder = leftElevator.getEncoder();
         rightEncoder = rightElevator.getEncoder();
 
-
-
-        setpoint = new TrapezoidProfile.State();
-        pidController = new PIDController(Constants.ElevatorConstants.kP, Constants.ElevatorConstants.kI, Constants.ElevatorConstants.kD);
-        profile = new TrapezoidProfile(new TrapezoidProfile.Constraints(max_velocity, max_acceleration));
-        goal = new TrapezoidProfile.State();
-        setpoint = new TrapezoidProfile.State();
-
-
-
-        kDt = 0.2;
-
-        kS = 0;
-        kG = .1;
-        kV = 0;
-        kA = 0;
-
-        max_velocity = 10;
-        max_acceleration = 5;
-
-
-      
+        // initialize the PID controller
+        m_LeftpidController = leftElevator.getClosedLoopController();
+        m_RightpidController = rightElevator.getClosedLoopController();
+            
         
+        
+       
     }
 
     public void resetEncoders() {
@@ -93,17 +83,16 @@ public class ElevatorSubsystem extends SubsystemBase {
      * 
      * @param left_power Value between 0 and 1
      */
- 
-     public void moveElevator(DoubleSupplier power){
+
+    public void moveElevator(DoubleSupplier power) {
         rightElevator.set(power.getAsDouble());
         leftElevator.set(power.getAsDouble());
-     }
+    }
 
-     
-    public void setRawPower(double power) {
-        voltage = power * Constants.ArmConstants.kVoltageMultiplier;
-        leftElevator.setVoltage(voltage);
-        rightElevator.setVoltage(voltage);
+    public void moveToPosition(double position) {
+
+        m_LeftpidController.setReference(position, SparkBase.ControlType.kPosition);
+        m_RightpidController.setReference(position, SparkBase.ControlType.kPosition);
     }
 
     public void setSpeed(DoubleSupplier speed) {
@@ -112,17 +101,9 @@ public class ElevatorSubsystem extends SubsystemBase {
         rightElevator.set(vroom);
     }
 
-    public void moveToPosition(double position) {
-        // goal = new TrapezoidProfile.State(position, 0);
-        // setpoint = profile.calculate(kDt, setpoint, goal);
-        // armMotor.setVoltage(pidController.calculate(armEncoder.getPosition(), setpoint.position)
-        //         + feedforward.calculate(Math.toRadians(armEncoder.getPosition()), setpoint.velocity));
-    }
-
-   // public boolean limitSwitchTriggered() {
-     //   return m_limit_switch.get();
-    //}
+    // public boolean limitSwitchTriggered() {
+    // return m_limit_switch.get();
+    // }
     public void periodic() {
-        kDt = kDt + 1 / 50;
     }
 }
