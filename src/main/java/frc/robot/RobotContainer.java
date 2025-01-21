@@ -21,6 +21,7 @@ import frc.robot.subsystems.*;
 // import frc.robot.subsystems.MotorTestSubsystem;
 import com.revrobotics.spark.SparkMax;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.Joystick;
 // import frc.robot.commands.Autos;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
@@ -59,7 +60,7 @@ public class RobotContainer {
          */
         // Replace with CommandPS4Controller or CommandJoystick if needed
         private final XboxController driverJoystick = new XboxController(0);
-
+       
        
 
         // DigitalInput limitSwitch = new DigitalInput(9);
@@ -90,13 +91,12 @@ public class RobotContainer {
          */
         private void configureBindings() {
                 // Define triggers
-                // Trigger xButton = new JoystickButton(driverJoystick, Constants.OIConstants.kXButton);
-                // Trigger yButton = new JoystickButton(driverJoystick, Constants.OIConstants.kYButton);
-                // Trigger aButton = new JoystickButton(driverJoystick, Constants.OIConstants.kAButton);
-                // Trigger bButton = new JoystickButton(driverJoystick, Constants.OIConstants.kBButton);
-                // Trigger leftBumper = new JoystickButton(driverJoystick, Constants.OIConstants.kLeftBumper);
-                // Trigger rightBumper = new JoystickButton(driverJoystick, Constants.OIConstants.kRightBumper);
-                // Trigger startButton = new JoystickButton(driverJoystick, Constants.OIConstants.kStartButton);
+                Trigger xButton = new JoystickButton(driverJoystick, Constants.OIConstants.kXButton);
+                Trigger yButton = new JoystickButton(driverJoystick, Constants.OIConstants.kYButton);
+                Trigger aButton = new JoystickButton(driverJoystick, Constants.OIConstants.kAButton);
+                Trigger bButton = new JoystickButton(driverJoystick, Constants.OIConstants.kBButton);
+                Trigger rightTrigger = new JoystickButton(driverJoystick, Constants.OIConstants.kRightTriggerAxis);
+               // Trigger upDpad = new JoystickButton(driverJoystick, Constants.OIConstants.kUpDpad);
 
                 // Set default commands
 
