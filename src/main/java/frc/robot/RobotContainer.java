@@ -96,10 +96,19 @@ public class RobotContainer {
                 Trigger aButton = new JoystickButton(driverJoystick, Constants.OIConstants.kAButton);
                 Trigger bButton = new JoystickButton(driverJoystick, Constants.OIConstants.kBButton);
                 Trigger rightTrigger = new JoystickButton(driverJoystick, Constants.OIConstants.kRightTriggerAxis);
-               // Trigger upDpad = new JoystickButton(driverJoystick, Constants.OIConstants.kUpDpad);
-
+                Trigger leftTrigger = new JoystickButton(driverJoystick, Constants.OIConstants.kLeftTriggerAxis);
+                Trigger select = new JoystickButton(driverJoystick, Constants.OIConstants.kBackButton);
                 // Set default commands
-
+                int pov = driverJoystick.getPOV();
+                if (pov == 0) {
+                    // D-pad up pressed
+                } else if (pov == 90) {
+                    // D-pad right pressed
+                } else if (pov == 180) {
+                    // D-pad down pressed
+                } else if (pov == 270) {
+                    // D-pad left pressed
+                }
 
          /*       swerveSubsystem.setDefaultCommand(new SwerveJoystickCmd(
                                 swerveSubsystem,

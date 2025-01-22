@@ -250,6 +250,7 @@ public final class Constants {
     public static final int kYButton = Button.kY.value;
     public static final int kAButton = Button.kA.value;
     public static final int kBButton = Button.kB.value;
+    public static final int kBackButton = Button.kBack.value;
     //public static final int pov = XboxController.getPOV();
     //if (pov == 90){}
 
