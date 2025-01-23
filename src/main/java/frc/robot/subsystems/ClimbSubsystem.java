@@ -34,7 +34,7 @@ public class ClimbSubsystem extends SubsystemBase {
 
     doubleSolenoidClimber = pH.makeDoubleSolenoid(PneumaticsConstants.kSolenoidInput,
         PneumaticsConstants.kSolenoidOutput);
-    addChild("Double Solenoid Far Arm", doubleSolenoidClimber);
+    addChild("Double Solenoid Climber", doubleSolenoidClimber);
 
     doubleSolenoidClimber.set(DoubleSolenoid.Value.kReverse);
   }
