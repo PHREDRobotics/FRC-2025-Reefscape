@@ -57,9 +57,6 @@ public class ElevatorSubsystem extends SubsystemBase {
         m_LeftpidController = leftElevator.getClosedLoopController();
         m_RightpidController = rightElevator.getClosedLoopController();
             
-        
-        
-       
     }
 
     public void resetEncoders() {
