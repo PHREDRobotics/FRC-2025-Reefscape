@@ -35,8 +35,8 @@ public class CoralSubsystem extends SubsystemBase {
       return inSpeed;
     }
   }
-
-  public void stopIntake() {
+  
+  public void stop() {
     coralMotorSparkMax.set(0);
   }
 

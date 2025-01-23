@@ -21,6 +21,7 @@ import frc.robot.subsystems.*;
 // import frc.robot.subsystems.MotorTestSubsystem;
 import com.revrobotics.spark.SparkMax;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.Joystick;
 // import frc.robot.commands.Autos;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
@@ -44,6 +45,7 @@ public class RobotContainer {
         private final LogitechPro joyStick = new LogitechPro(1);
 
         private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
+        private final CoralSubsystem coralSubsystem = new CoralSubsystem();
 
         // private final MotorTestSubsystem motorTestSubsystem = new
         // MotorTestSubsystem();
@@ -59,7 +61,7 @@ public class RobotContainer {
          */
         // Replace with CommandPS4Controller or CommandJoystick if needed
         private final XboxController driverJoystick = new XboxController(0);
-
+       
        
 
         // DigitalInput limitSwitch = new DigitalInput(9);
@@ -90,16 +92,29 @@ public class RobotContainer {
          */
         private void configureBindings() {
                 // Define triggers
-                // Trigger xButton = new JoystickButton(driverJoystick, Constants.OIConstants.kXButton);
-                // Trigger yButton = new JoystickButton(driverJoystick, Constants.OIConstants.kYButton);
-                // Trigger aButton = new JoystickButton(driverJoystick, Constants.OIConstants.kAButton);
-                // Trigger bButton = new JoystickButton(driverJoystick, Constants.OIConstants.kBButton);
-                // Trigger leftBumper = new JoystickButton(driverJoystick, Constants.OIConstants.kLeftBumper);
-                // Trigger rightBumper = new JoystickButton(driverJoystick, Constants.OIConstants.kRightBumper);
-                // Trigger startButton = new JoystickButton(driverJoystick, Constants.OIConstants.kStartButton);
-
+                Trigger xButton = new JoystickButton(driverJoystick, Constants.OIConstants.kXButton);
+                Trigger yButton = new JoystickButton(driverJoystick, Constants.OIConstants.kYButton);
+                Trigger aButton = new JoystickButton(driverJoystick, Constants.OIConstants.kAButton);
+                Trigger bButton = new JoystickButton(driverJoystick, Constants.OIConstants.kBButton);
+                Trigger rightTrigger = new JoystickButton(driverJoystick, Constants.OIConstants.kRightTriggerAxis);
+                Trigger leftTrigger = new JoystickButton(driverJoystick, Constants.OIConstants.kLeftTriggerAxis);
+                Trigger start = new JoystickButton(driverJoystick, Constants.OIConstants.kStartButton);
                 // Set default commands
+                
+                int pov = driverJoystick.getPOV();
+                if (pov == 0) {
+                    // D-pad up pressed
+                } else if (pov == 90) {
+                    // D-pad right pressed
+                } else if (pov == 180) {
+                    // D-pad down pressed
+                } else if (pov == 270) {
+                    // D-pad left pressed
+                }
+                
 
+                bButton.onTrue(new CoralOuttakeCommand(coralSubsystem));
+                aButton.onTrue(new CoralIntakeCommand(coralSubsystem));
 
          /*       swerveSubsystem.setDefaultCommand(new SwerveJoystickCmd(
                                 swerveSubsystem,
