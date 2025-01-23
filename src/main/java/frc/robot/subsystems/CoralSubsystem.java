@@ -24,16 +24,16 @@ public class CoralSubsystem extends SubsystemBase {
 
   public void Outtake() {
     timer.reset();
-    coralMotorSparkMax.set(speedConvert(-outtakeSpeed));
+    coralMotorSparkMax.set(-outtakeSpeed);
     timer.start();
   }
 
   public double speedConvert(double inSpeed) {
-    if (inSpeed < 0.2 && inSpeed > -0.2) {
-      return 0.0;
-    } else {
+    //if (inSpeed < 0.2 && inSpeed > -0.2) {
+    //  return 0.0;
+    //} else {
       return inSpeed;
-    }
+    //}
   }
   
   public void stop() {
@@ -51,7 +51,7 @@ public class CoralSubsystem extends SubsystemBase {
   }
 
   public static boolean outtakeIsTimeDone() {
-    return timer.hasElapsed(Constants.GrabberConstants.kOuttakeTime);
+    return timer.hasElapsed(Constants.CoralConstants.kCoralOuttakeTime);
 
   }
 
@@ -63,10 +63,10 @@ public class CoralSubsystem extends SubsystemBase {
     
 
   // Slider things VARIABLES
-  outtakeSpeed=SmartDashboard.getNumber("Outtake Speed",outtakeSpeed);
-  intakeSpeed=SmartDashboard.getNumber("Intake Speed",intakeSpeed);
-  SmartDashboard.putNumber("Outtake Speed",outtakeSpeed);
-  SmartDashboard.putNumber("Intake Speed",intakeSpeed);
+  outtakeSpeed=SmartDashboard.getNumber("Outtake Speed", outtakeSpeed);
+  intakeSpeed=SmartDashboard.getNumber("Intake Speed", intakeSpeed);
+  SmartDashboard.putNumber("Outtake Speed", outtakeSpeed);
+  SmartDashboard.putNumber("Intake Speed", intakeSpeed);
   // This method will be called once per scheduler run
   // We will have a pull in fast and slow and a push out fast and slow
   // When we pull in we will use the beam break sensor to stop the motor
