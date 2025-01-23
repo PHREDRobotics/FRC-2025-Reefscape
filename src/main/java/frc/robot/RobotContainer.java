@@ -25,6 +25,7 @@ import edu.wpi.first.wpilibj.Joystick;
 // import frc.robot.commands.Autos;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -44,7 +45,7 @@ public class RobotContainer {
         // MotorTestSubsystem();
         private final LogitechPro joyStick = new LogitechPro(1);
 
-        private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
+        //private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
         private final CoralSubsystem coralSubsystem = new CoralSubsystem();
 
         // private final MotorTestSubsystem motorTestSubsystem = new
@@ -114,8 +115,8 @@ public class RobotContainer {
                 
 
                 bButton.onTrue(new CoralOuttakeCommand(coralSubsystem));
-                aButton.onTrue(new CoralIntakeCommand(coralSubsystem));
-
+               // aButton.onTrue(new CoralIntakeCommand(coralSubsystem));
+               aButton.onTrue(new CoralIntakeTest(coralSubsystem));
          /*       swerveSubsystem.setDefaultCommand(new SwerveJoystickCmd(
                                 swerveSubsystem,
                                 () -> -joyStick.getPitch(),

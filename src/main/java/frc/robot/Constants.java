@@ -272,6 +272,7 @@ public final class Constants {
   public static final double kCoralIntakeTime = 1.0;
   public static final double kCoralOuttakeSpeed = 1.0;
   public static final double kCoralOuttakeTime = 1.0;
+  public static final boolean test = false;
   }
 
 }

@@ -59,7 +59,7 @@ public class CoralSubsystem extends SubsystemBase {
   public void periodic() {
     SmartDashboard.putBoolean("Pressed?", isCoralLoaded());
     SmartDashboard.putBoolean("Manual Override Press", SmartDashboard.getBoolean("Manual Override Press", false));
-    
+    SmartDashboard.putBoolean("Is Limit Switch Triggered?", forwardLimit.isPressed());
     
 
   // Slider things VARIABLES
