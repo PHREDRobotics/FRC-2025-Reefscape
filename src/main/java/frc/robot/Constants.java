@@ -4,7 +4,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
-
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Axis;
 import edu.wpi.first.wpilibj.XboxController.Button;
 
@@ -250,6 +250,9 @@ public final class Constants {
     public static final int kYButton = Button.kY.value;
     public static final int kAButton = Button.kA.value;
     public static final int kBButton = Button.kB.value;
+    public static final int kBackButton = Button.kBack.value;
+    //public static final int pov = XboxController.getPOV();
+    //if (pov == 90){}
 
     public static final double kDeadband = 0.15;
     public static final double kHighDeadband = 0.25;

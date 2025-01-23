@@ -51,7 +51,7 @@ public class CoralSubsystem extends SubsystemBase {
   }
 
   public static boolean outtakeIsTimeDone() {
-    return timer.hasElapsed(Constants.GrabberConstants.kOuttakeTime);
+    return timer.hasElapsed(Constants.CoralConstants.kCoralOuttakeTime);
 
   }
 
