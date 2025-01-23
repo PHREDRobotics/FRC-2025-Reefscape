@@ -44,7 +44,7 @@ public class RobotContainer {
         private final LogitechPro joyStick = new LogitechPro(1);
 
         private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem(joyStick);
-
+        private final ClimbSubsystem climbsubsystem = new ClimbSubsystem();
         // private final MotorTestSubsystem motorTestSubsystem = new
         // MotorTestSubsystem();
         /*
@@ -94,8 +94,8 @@ public class RobotContainer {
                 // Trigger yButton = new JoystickButton(driverJoystick, Constants.OIConstants.kYButton);
                 // Trigger aButton = new JoystickButton(driverJoystick, Constants.OIConstants.kAButton);
                 // Trigger bButton = new JoystickButton(driverJoystick, Constants.OIConstants.kBButton);
-                // Trigger leftBumper = new JoystickButton(driverJoystick, Constants.OIConstants.kLeftBumper);
-                // Trigger rightBumper = new JoystickButton(driverJoystick, Constants.OIConstants.kRightBumper);
+                Trigger leftBumper = new JoystickButton(driverJoystick, Constants.OIConstants.kLeftBumper);
+                Trigger rightBumper = new JoystickButton(driverJoystick, Constants.OIConstants.kRightBumper);
                 // Trigger startButton = new JoystickButton(driverJoystick, Constants.OIConstants.kStartButton);
 
                 // Set default commands
@@ -130,7 +130,8 @@ public class RobotContainer {
                 // aButton.onTrue(new IntakeCommand(intakeSubsystem));
                 // // leftBumper.onTrue(new AutoResetArmEncoder(armSubsystem));
                 // startButton.onTrue(new InstantCommand(() -> swerveSubsystem.zeroHeading()));
-                
+                leftBumper.onTrue(new ExtendLift(climbsubsystem));
+                rightBumper.onTrue(new RetractLift(climbsubsystem));
 
                 /*
                  * Use this to pass the autonomous command to the main {@link Robot} class.

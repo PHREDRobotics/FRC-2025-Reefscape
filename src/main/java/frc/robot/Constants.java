@@ -262,7 +262,7 @@ public final class Constants {
   }
   public static final class PneumaticsConstants {
     public static final int kPneumaticsCANID = 40;
-    public static final int kSolenoidInput = 8;
-    public static final int kSolenoidOutput = 7;
+    public static final int kSolenoidInput = 14;
+    public static final int kSolenoidOutput = 13;
   }
 }
