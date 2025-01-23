@@ -21,6 +21,7 @@ import frc.robot.subsystems.*;
 // import frc.robot.subsystems.MotorTestSubsystem;
 import com.revrobotics.spark.SparkMax;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.Joystick;
 // import frc.robot.commands.Autos;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
@@ -44,6 +45,7 @@ public class RobotContainer {
         private final LogitechPro joyStick = new LogitechPro(1);
 
         private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem(joyStick);
+        private final AlgaeSubsystem algaeSubsystem = new AlgaeSubsystem();     
 
         // private final MotorTestSubsystem motorTestSubsystem = new
         // MotorTestSubsystem();
@@ -58,7 +60,7 @@ public class RobotContainer {
          * 10, 5);
          */
         // Replace with CommandPS4Controller or CommandJoystick if needed
-        private final XboxController driverJoystick = new XboxController(0);
+        private final CommandXboxController driverJoystick = new CommandXboxController(0);
 
        
 
@@ -97,7 +99,10 @@ public class RobotContainer {
                 // Trigger leftBumper = new JoystickButton(driverJoystick, Constants.OIConstants.kLeftBumper);
                 // Trigger rightBumper = new JoystickButton(driverJoystick, Constants.OIConstants.kRightBumper);
                 // Trigger startButton = new JoystickButton(driverJoystick, Constants.OIConstants.kStartButton);
+                
 
+                Trigger xButton = driverJoystick.x();   
+                Trigger yButton = driverJoystick.y();
                 // Set default commands
 
 
@@ -114,7 +119,10 @@ public class RobotContainer {
                 // Configure mechanical triggers
                 // limitTrigger.onTrue(
                 // new AutoResetArmEncoder(armSubsystem, limitSwitch.get()));
+                
 
+                xButton.onTrue(new AlgaeIntakeCommand(algaeSubsystem));
+                yButton.onTrue(new AlgaeOuttakeCommand(algaeSubsystem));
                 // Configure gamepad buttons
                 // xButton.onTrue(new ArmMotor(Constants.ArmConstants.kArmLow, armSubsystem));
                 // yButton.onTrue(new ArmMotor(Constants.ArmConstants.kArmMid, armSubsystem));
