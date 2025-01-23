@@ -164,7 +164,7 @@ public final class Constants {
     public static final int kRightAlgaeControllerPort = 9;
     public static final int kXBtn = Button.kX.value;
     public static final double kAlgaeSpeed = 0.75;
-    public static final double kAlgaeTime = 1.5;
+    public static final double kAlgaeTime = 2;
   }
 
   /**
