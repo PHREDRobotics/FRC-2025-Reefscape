@@ -45,6 +45,7 @@ public class RobotContainer {
         private final LogitechPro joyStick = new LogitechPro(1);
 
         private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
+        private final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
 
         // private final MotorTestSubsystem motorTestSubsystem = new
         // MotorTestSubsystem();
@@ -59,7 +60,7 @@ public class RobotContainer {
          * 10, 5);
          */
         // Replace with CommandPS4Controller or CommandJoystick if needed
-        private final XboxController driverJoystick = new XboxController(0);
+        private final CommandXboxController driverJoystick = new CommandXboxController(0);
        
        
 
@@ -91,24 +92,12 @@ public class RobotContainer {
          */
         private void configureBindings() {
                 // Define triggers
-                Trigger xButton = new JoystickButton(driverJoystick, Constants.OIConstants.kXButton);
-                Trigger yButton = new JoystickButton(driverJoystick, Constants.OIConstants.kYButton);
-                Trigger aButton = new JoystickButton(driverJoystick, Constants.OIConstants.kAButton);
-                Trigger bButton = new JoystickButton(driverJoystick, Constants.OIConstants.kBButton);
-                Trigger rightTrigger = new JoystickButton(driverJoystick, Constants.OIConstants.kRightTriggerAxis);
-                Trigger leftTrigger = new JoystickButton(driverJoystick, Constants.OIConstants.kLeftTriggerAxis);
-                Trigger select = new JoystickButton(driverJoystick, Constants.OIConstants.kBackButton);
-                // Set default commands
-                int pov = driverJoystick.getPOV();
-                if (pov == 0) {
-                    // D-pad up pressed
-                } else if (pov == 90) {
-                    // D-pad right pressed
-                } else if (pov == 180) {
-                    // D-pad down pressed
-                } else if (pov == 270) {
-                    // D-pad left pressed
-                }
+                Trigger xButton = driverJoystick.x();
+                Trigger yButton = driverJoystick.y();
+                Trigger dpadDown = driverJoystick.povDown();
+                Trigger dpadUp = driverJoystick.povUp();
+                Trigger dpadLeft = driverJoystick.povLeft();
+                Trigger dpadRight = driverJoystick.povRight();
 
          /*       swerveSubsystem.setDefaultCommand(new SwerveJoystickCmd(
                                 swerveSubsystem,
@@ -119,8 +108,7 @@ public class RobotContainer {
                                 () -> joyStick.getTrigger()));
      */
                                 
-
-                // Configure mechanical triggers
+                xButton.whileTrue(new ElevatorManualLift(() -> driverJoystick.getLeftTriggerAxis(), elevatorSubsystem));
                 // limitTrigger.onTrue(
                 // new AutoResetArmEncoder(armSubsystem, limitSwitch.get()));
 
