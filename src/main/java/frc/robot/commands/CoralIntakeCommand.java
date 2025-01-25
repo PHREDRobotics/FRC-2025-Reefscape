@@ -1,8 +1,7 @@
 package frc.robot.commands;
 
 import frc.robot.subsystems.CoralSubsystem;
-
-
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class CoralIntakeCommand extends Command {
@@ -13,13 +12,13 @@ public class CoralIntakeCommand extends Command {
   public CoralIntakeCommand(CoralSubsystem subsystem) {
     coralSubsystem = subsystem;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(coralSubsystem);
+    addRequirements(subsystem);
 
   }
 
   @Override
   public void initialize() {
-    coralSubsystem.pickUpCoral();
+    coralSubsystem.startIntake();
   }
 
   @Override

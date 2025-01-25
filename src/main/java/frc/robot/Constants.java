@@ -268,9 +268,9 @@ public final class Constants {
   public static final class CoralConstants {
     
   public static final int kCoralSparkMaxCanID = 6;
-  public static final double kCoralIntakeSpeed = 1.0;
+  public static final double kCoralIntakeSpeed = -0.5;
   public static final double kCoralIntakeTime = 1.0;
-  public static final double kCoralOuttakeSpeed = 1.0;
+  public static final double kCoralOuttakeSpeed = 0.5;
   public static final double kCoralOuttakeTime = 1.0;
   public static final boolean test = false;
   }

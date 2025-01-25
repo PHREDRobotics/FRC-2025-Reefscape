@@ -116,7 +116,7 @@ public class RobotContainer {
 
                 bButton.onTrue(new CoralOuttakeCommand(coralSubsystem));
                // aButton.onTrue(new CoralIntakeCommand(coralSubsystem));
-               aButton.onTrue(new CoralIntakeTest(coralSubsystem));
+               aButton.onTrue(new CoralIntakeCommand(coralSubsystem));
          /*       swerveSubsystem.setDefaultCommand(new SwerveJoystickCmd(
                                 swerveSubsystem,
                                 () -> -joyStick.getPitch(),

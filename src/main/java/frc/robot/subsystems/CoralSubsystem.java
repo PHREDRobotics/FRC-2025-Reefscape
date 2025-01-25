@@ -13,6 +13,8 @@ public class CoralSubsystem extends SubsystemBase {
   private static final Timer timer = new Timer();
   public SparkMax coralMotorSparkMax = new SparkMax(CoralConstants.kCoralSparkMaxCanID, MotorType.kBrushless);
   public SparkLimitSwitch forwardLimit = coralMotorSparkMax.getForwardLimitSwitch();
+  
+  
 
   public double intakeSpeed = CoralConstants.kCoralIntakeSpeed;
   public double outtakeSpeed = CoralConstants.kCoralOuttakeSpeed;
@@ -22,9 +24,9 @@ public class CoralSubsystem extends SubsystemBase {
     SmartDashboard.putString("Outtake Speed: ", String.valueOf(outtakeSpeed));
   }
 
-  public void Outtake() {
+  public void startOuttake() {
     timer.reset();
-    coralMotorSparkMax.set(-outtakeSpeed);
+    coralMotorSparkMax.set(outtakeSpeed);
     timer.start();
   }
 
@@ -40,14 +42,12 @@ public class CoralSubsystem extends SubsystemBase {
     coralMotorSparkMax.set(0);
   }
 
-  public void pickUpCoral() {
-    // This will stop when the beam in our beam break sensor is broken
-
-    coralMotorSparkMax.set(outtakeSpeed);
-  }
+ public void startIntake(){
+  coralMotorSparkMax.set(intakeSpeed);
+ }
 
   public boolean isCoralLoaded() {
-    return forwardLimit.isPressed() || SmartDashboard.getBoolean("Manual Override Press", false);
+    return !forwardLimit.isPressed();
   }
 
   public static boolean outtakeIsTimeDone() {
@@ -59,7 +59,7 @@ public class CoralSubsystem extends SubsystemBase {
   public void periodic() {
     SmartDashboard.putBoolean("Pressed?", isCoralLoaded());
     SmartDashboard.putBoolean("Manual Override Press", SmartDashboard.getBoolean("Manual Override Press", false));
-    SmartDashboard.putBoolean("Is Limit Switch Triggered?", forwardLimit.isPressed());
+    SmartDashboard.putBoolean("Is Limit Switch Triggered?", !forwardLimit.isPressed());
     
 
   // Slider things VARIABLES
