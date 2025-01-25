@@ -92,13 +92,7 @@ public class RobotContainer {
          */
         private void configureBindings() {
                 // Define triggers
-                // Trigger xButton = new JoystickButton(driverJoystick, Constants.OIConstants.kXButton);
-                // Trigger yButton = new JoystickButton(driverJoystick, Constants.OIConstants.kYButton);
-                // Trigger aButton = new JoystickButton(driverJoystick, Constants.OIConstants.kAButton);
-                // Trigger bButton = new JoystickButton(driverJoystick, Constants.OIConstants.kBButton);
-                // Trigger leftBumper = new JoystickButton(driverJoystick, Constants.OIConstants.kLeftBumper);
-                // Trigger rightBumper = new JoystickButton(driverJoystick, Constants.OIConstants.kRightBumper);
-                // Trigger startButton = new JoystickButton(driverJoystick, Constants.OIConstants.kStartButton);
+                // example: Trigger xButton = new JoystickButton(driverJoystick, Constants.OIConstants.kXButton);
                 
 
                 Trigger xButton = driverJoystick.x();   
