@@ -51,8 +51,8 @@ public class Constants {
     public static final int kFrontRightTurnMotorCANId = 12;
     public static final int kBackRightTurnMotorCANId = 17;
 
-    public static final double kDrivingMotorReduction = 4;
-    public static final double kTurningMotorReduction = 4;
+    public static final double kDrivingMotorReduction = 40;
+    public static final double kTurningMotorReduction = 40;
 
     public static final Translation2d kFrontLeftLocationMeters = new Translation2d(
             Units.inchesToMeters(Constants.PhysicalConstants.kFrontLeftLocationInches.getX()),
@@ -69,7 +69,7 @@ public class Constants {
     
     public static final SwerveDriveKinematics kKinematics = new SwerveDriveKinematics(
             Constants.SwerveConstants.kFrontLeftLocationMeters, Constants.SwerveConstants.kFrontRightLocationMeters, 
-            Constants.SwerveConstants.kBackLeftLocationMeters, Constants.SwerveConstants.kFrontLeftLocationMeters);
+            Constants.SwerveConstants.kBackLeftLocationMeters, Constants.SwerveConstants.kBackRightLocationMeters);
   }
 
   public static final class GyroConstants {

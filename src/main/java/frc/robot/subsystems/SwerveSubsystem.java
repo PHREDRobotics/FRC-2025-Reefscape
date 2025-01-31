@@ -7,22 +7,26 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.StructArrayPublisher;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
 import frc.robot.Configs;
+import frc.robot.Constants;
 
 public class SwerveSubsystem extends SubsystemBase {
     private final SwerveModule m_frontLeft;
@@ -38,6 +42,7 @@ public class SwerveSubsystem extends SubsystemBase {
     RobotConfig config;
 
     private final Field2d m_poseEstimatorField;
+    StructArrayPublisher<SwerveModuleState> publisher;
 
     public final SwerveSimulation m_swerveSimulation;
 
@@ -59,7 +64,7 @@ public class SwerveSubsystem extends SubsystemBase {
                     Constants.SwerveConstants.kBackRightTurnMotorCANId,
                     Configs.BackRightConfig.drivingConfig,
                     Configs.BackRightConfig.turningConfig);
-            
+
             m_swerveSimulation = null;
 
             m_gyro = new AHRSGyroIO(Constants.GyroConstants.kComType);
@@ -85,12 +90,12 @@ public class SwerveSubsystem extends SubsystemBase {
                 getModulePositions());
 
         m_poseEstimator = new SwerveDrivePoseEstimator(
-            Constants.SwerveConstants.kKinematics,
-            m_gyro.getRotation2d(),
-            getModulePositions(),
-            new Pose2d(),
-            VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5)),
-            VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(30)));
+                Constants.SwerveConstants.kKinematics,
+                m_gyro.getRotation2d(),
+                getModulePositions(),
+                new Pose2d(),
+                VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5)),
+                VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(30)));
 
         try {
             config = RobotConfig.fromGUISettings();
@@ -120,6 +125,9 @@ public class SwerveSubsystem extends SubsystemBase {
 
         m_poseEstimatorField = new Field2d();
         SmartDashboard.putData("Pose estimation field", m_poseEstimatorField);
+
+        publisher = NetworkTableInstance.getDefault()
+                .getStructArrayTopic("States", SwerveModuleState.struct).publish();
     }
 
     public void drive(DoubleSupplier xSpeed, DoubleSupplier ySpeed, DoubleSupplier rot,
@@ -151,8 +159,13 @@ public class SwerveSubsystem extends SubsystemBase {
         m_backRight.setDesiredState(swerveModuleStates[3]);
 
         if (RobotBase.isSimulation()) {
-            m_swerveSimulation.update(getSpeeds(fieldOriented.getAsBoolean()));
+            m_swerveSimulation.update(xSpeed, ySpeed, rot, fieldOriented, m_gyro.getRotation2d());
         }
+
+        publisher.set(Constants.SwerveConstants.kKinematics.toSwerveModuleStates(new ChassisSpeeds(
+            xSpeed.getAsDouble() * Constants.PhysicalConstants.kMaxSpeed,
+            ySpeed.getAsDouble() * Constants.PhysicalConstants.kMaxSpeed,
+            -rot.getAsDouble() * Constants.PhysicalConstants.kMaxAngularSpeed)));
     }
 
     public void drive(ChassisSpeeds speeds, BooleanSupplier fieldOriented) {
@@ -171,7 +184,7 @@ public class SwerveSubsystem extends SubsystemBase {
         m_backRight.setDesiredState(swerveModuleStates[3]);
 
         if (RobotBase.isSimulation()) {
-            m_swerveSimulation.update(getSpeeds(fieldOriented.getAsBoolean()));
+            //m_swerveSimulation.update(getSpeeds(fieldOriented.getAsBoolean()));
         }
     }
 
@@ -242,7 +255,7 @@ public class SwerveSubsystem extends SubsystemBase {
     }
 
     public void periodic() {
-        //updateOdometry();
+        // updateOdometry();
 
         m_poseEstimatorField.setRobotPose(m_poseEstimator.getEstimatedPosition());
 
@@ -257,13 +270,14 @@ public class SwerveSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Swerve/BackRight/Speed", m_backRight.getState().speedMetersPerSecond);
         SmartDashboard.putNumber("Swerve/BackRight/Angle", m_backRight.getPosition().angle.getDegrees());
 
-        SmartDashboard.putString("Speeds", getSpeeds(true).toString());
+        SmartDashboard.putString("Speeds", Constants.SwerveConstants.kKinematics.toChassisSpeeds(getModuleStates()).toString());
+
 
         SmartDashboard.updateValues();
     }
 
     @Override
     public void simulationPeriodic() {
-        //updateOdometry();
+        // updateOdometry();
     }
 }

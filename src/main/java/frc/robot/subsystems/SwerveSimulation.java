@@ -6,6 +6,10 @@ import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.Pounds;
 import static edu.wpi.first.units.Units.Volts;
 
+import java.util.function.BooleanSupplier;
+import java.util.function.DoubleSupplier;
+
+import org.dyn4j.geometry.Rotation;
 import org.ironmaple.simulation.SimulatedArena;
 import org.ironmaple.simulation.drivesims.GyroSimulation;
 import org.ironmaple.simulation.drivesims.SelfControlledSwerveDriveSimulation;
@@ -61,10 +65,22 @@ public class SwerveSimulation {
         SimulatedArena.getInstance().addDriveTrainSimulation(m_swerveSimulation.getDriveTrainSimulation());
     }
 
-    public void update(ChassisSpeeds moduleSpeeds) {
+    public void update(DoubleSupplier xSpeed, DoubleSupplier ySpeed, DoubleSupplier rot, BooleanSupplier fieldOriented, Rotation2d gyroRotation) {
+        ChassisSpeeds moduleSpeeds = ChassisSpeeds.discretize(
+                fieldOriented.getAsBoolean()
+                        ? ChassisSpeeds.fromFieldRelativeSpeeds(
+                                xSpeed.getAsDouble() * Constants.PhysicalConstants.kMaxSpeed,
+                                ySpeed.getAsDouble() * Constants.PhysicalConstants.kMaxSpeed,
+                                -rot.getAsDouble() * Constants.PhysicalConstants.kMaxAngularSpeed,
+                                gyroRotation)
+                        : new ChassisSpeeds(
+                                xSpeed.getAsDouble() * Constants.PhysicalConstants.kMaxSpeed,
+                                ySpeed.getAsDouble() * Constants.PhysicalConstants.kMaxSpeed,
+                                -rot.getAsDouble() * Constants.PhysicalConstants.kMaxAngularSpeed),
+                Constants.SwerveConstants.kDtSeconds);
         m_swerveSimulation.runChassisSpeeds(moduleSpeeds,
                 new Translation2d(),
-                false, false);
+                false, true);
         m_swerveSimulation.periodic();
         m_field.setRobotPose(this.m_swerveSimulation.getActualPoseInSimulationWorld());
     }
