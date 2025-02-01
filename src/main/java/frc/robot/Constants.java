@@ -5,6 +5,7 @@ import com.studica.frc.AHRS.NavXComType;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
 
@@ -14,10 +15,10 @@ public class Constants {
 
     public static final double kBumperLength = 32;
 
-    public static final Translation2d kFrontLeftLocationInches = new Translation2d(15, 15);
-    public static final Translation2d kFrontRightLocationInches = new Translation2d(15, -15);
-    public static final Translation2d kBackLeftLocationInches = new Translation2d(-15, 15);
-    public static final Translation2d kBackRightLocationInches = new Translation2d(-15, -15);
+    public static final Translation2d kFrontLeftLocationInches = new Translation2d(-21, 13.5);
+    public static final Translation2d kFrontRightLocationInches = new Translation2d(3, 13.5);
+    public static final Translation2d kBackLeftLocationInches = new Translation2d(-21, -10.5);
+    public static final Translation2d kBackRightLocationInches = new Translation2d(3, -10.5);
 
     public static final double kMaxSpeed = 6; // 3
     public static final double kMaxAngularSpeed = 6;
@@ -70,6 +71,10 @@ public class Constants {
     public static final SwerveDriveKinematics kKinematics = new SwerveDriveKinematics(
             Constants.SwerveConstants.kFrontLeftLocationMeters, Constants.SwerveConstants.kFrontRightLocationMeters, 
             Constants.SwerveConstants.kBackLeftLocationMeters, Constants.SwerveConstants.kBackRightLocationMeters);
+
+    public static DifferentialDriveKinematics kKinematics() {
+      throw new UnsupportedOperationException("Unimplemented method 'kKinematics'");
+    }
   }
 
   public static final class GyroConstants {
