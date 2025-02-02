@@ -18,7 +18,7 @@ public class VisionSubsystem extends SubsystemBase {
   /** Creates a new ExampleSubsystem. */
   public boolean m_LimelightHasValidTarget = false;
   public boolean m_IsLimeLightCentered = false;
-  NetworkTable m_table = NetworkTableInstance.getDefault().getTable("limelight");
+  NetworkTable m_table = NetworkTableInstance.getDefault().getTable("limelight_phred");
   // double tv = m_table.getEntry("tv").getDouble(0);
   double tx = m_table.getEntry("tx").getDouble(0);
   double ty = m_table.getEntry("ty").getDouble(0);
@@ -49,7 +49,7 @@ public class VisionSubsystem extends SubsystemBase {
   // We will need to move accordingly but I think that will go elsewhere
 
   // public void vision() {
-  // m_table = NetworkTableInstance.getDefault().getTable("limelight-phred");
+  // m_table = NetworkTableInstance.getDefault().getTable("limelight_phred");
   // tv = m_table.getEntry("tv").getDouble(0);
   // tx = m_table.getEntry("tx").getDouble(0);
   // ty = m_table.getEntry("ty").getDouble(0);
@@ -127,7 +127,7 @@ public class VisionSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    m_table = NetworkTableInstance.getDefault().getTable("limelight-phred");
+    m_table = NetworkTableInstance.getDefault().getTable("limelight_phred");
     // tv = m_table.getEntry("tv").getDouble(0);
     tx = m_table.getEntry("tx").getDouble(0);
     ty = m_table.getEntry("ty").getDouble(0);
