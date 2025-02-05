@@ -14,7 +14,7 @@ public class CoralSubsystem extends SubsystemBase {
   public SparkMax coralMotorSparkMax = new SparkMax(CoralConstants.kCoralSparkMaxCanID, MotorType.kBrushless);
   public SparkLimitSwitch forwardLimit = coralMotorSparkMax.getForwardLimitSwitch();
   
-  
+  // WARNING!!! THE MOTOR HARD LIMIT IS REQUIRED TO BE TWEEKED ON THE SPARKMAX, UNABLE TO IN CODE.
 
   public double intakeSpeed = CoralConstants.kCoralIntakeSpeed;
   public double outtakeSpeed = CoralConstants.kCoralOuttakeSpeed;
