@@ -3,15 +3,16 @@ package frc.robot.commands;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.ElevatorSubsystem;
 
-public class ElevatorManualLift extends Command{
-  DoubleSupplier power;
+public class ElevatorManualLift extends Command {
+    DoubleSupplier power;
     ElevatorSubsystem elevator_subsystem;
 
     /**
      * 
-     * @param leftLiftPower power for the left lift motor
+     * @param leftLiftPower  power for the left lift motor
      * @param rightLiftPower power for the right lift motor
      * @param liftSubsystem
      */
@@ -24,13 +25,18 @@ public class ElevatorManualLift extends Command{
 
     @Override
     public void initialize() {
-        elevator_subsystem.resetEncoders();
     }
 
     @Override
     public void execute() {
-        this.elevator_subsystem.moveElevator(this.power);
+        double speed = power.getAsDouble();
+        speed = speed * Math.abs(speed);
+
+        if (Math.abs(speed) < OIConstants.kDeadband) {
+            speed = 0;
+        }
+
+        this.elevator_subsystem.setRawPower(speed);
     }
 
-  
 }

@@ -28,8 +28,7 @@ public final class Constants {
     public static final double kDriveEncoderRot2Meter = kDriveMotorGearRatio * Math.PI * kWheelDiameterMeters;
     public static final double kDriveEncoderRPM2MeterPerSec = kDriveEncoderRot2Meter / 60;
     public static final double kDriveWheelFreeRps = NeoMotorConstants.kFreeSpeedRpm / 60;
-    
-    
+
     // The MAXSwerve module can be configured with one of three pinion gears: 12T,
     // 13T, or 14T. This changes the drive speed of the module (a pinion gear with
     // more teeth will result in a robot that drives faster).
@@ -43,7 +42,6 @@ public final class Constants {
     public static final double kDriveWheelFreeSpeedRps = (kDrivingMotorFreeSpeedRps * kWheelCircumferenceMeters)
         / kDrivingMotorReduction;
 
-        
     // public static final double kTurningEncoderRot2Rad = kTurningMotorGearRatio;
     public static final int kTurnMotorEncoderTicksPerRotation = 42;
     public static final double kTurningMotorRotationPerSteerRotation = 150 / 7;
@@ -125,12 +123,12 @@ public final class Constants {
     public static final boolean kBackLeftDriveAbsoluteEncoderReversed = false;
     public static final boolean kFrontRightDriveAbsoluteEncoderReversed = false;
     public static final boolean kBackRightDriveAbsoluteEncoderReversed = false;
-/*
-    public static final double kFrontLeftModuleChassisAngularOffset = -Math.PI/2;
-    public static final double kBackLeftModuleChassisAngularOffset = Math.PI;
-    public static final double kFrontRightModuleChassisAngularOffset = 0;
-    public static final double kBackRightModuleChassisAngularOffset = Math.PI/2;
-*/
+    /*
+     * public static final double kFrontLeftModuleChassisAngularOffset = -Math.PI/2;
+     * public static final double kBackLeftModuleChassisAngularOffset = Math.PI;
+     * public static final double kFrontRightModuleChassisAngularOffset = 0;
+     * public static final double kBackRightModuleChassisAngularOffset = Math.PI/2;
+     */
     public static final double kPhysicalMaxSpeedMetersPerSecond = 5;
     public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 2 * Math.PI;
 
@@ -174,14 +172,15 @@ public final class Constants {
    * ShooterConstants is now for algae, permanent rename?
    */
   /*
-  public static final class ShooterConstants {
-    public static final int kLeftShooterControllerPort = 41;
-    public static final int kRightShooterControllerPort = 42;
-    public static final int kXBtn = Button.kX.value;
-    public static final double kShooterSpeed = 0.75;
-    public static final double kShooterTime = 1.5;
-
-  } */
+   * public static final class ShooterConstants {
+   * public static final int kLeftShooterControllerPort = 41;
+   * public static final int kRightShooterControllerPort = 42;
+   * public static final int kXBtn = Button.kX.value;
+   * public static final double kShooterSpeed = 0.75;
+   * public static final double kShooterTime = 1.5;
+   * 
+   * }
+   */
 
   public static final class AlgaeConstants {
     public static final int kLeftAlgaeControllerPort = 8;
@@ -191,22 +190,46 @@ public final class Constants {
     public static final double kAlgaeTime = 1.5;
   }
 
-  //Names and heights are not final
-  public static final class ElevatorConstants{
-    //Will need to play with these number some more
+  // Names and heights are not final
+  public static final class ElevatorConstants {
+    // Will need to play with these number some more
     public static final double kP = 0.6;
     public static final double kI = 0.0;
     public static final double kD = 0.0;
-    //not sure if it is actually a limit switch or not
+    
+    // Need to change these values later
     public static final int kElevatorLimitSwitchPort = 0;
-    public static final int kRightElevatorPort = 0;
-    public static final int kLeftElevatorPort = 0;
+    public static final int kElevatorPort = 0;
     public static final double kProcessor = 0;
     public static final double kLevel1 = 1;
     public static final double kLevel2 = 2;
     public static final double kLevel3 = 3;
     public static final double kLevel4 = 4;
     public static final double kHumanPlayerStationHeight = 5;
+
+    //Might not have a second limitswitch
+    public static final int kElevatorLimitSwitchPortTop = 0;
+
+    // Physical constants
+    public static final double kEncoderTicksPerRotation = 42;
+    public static final double kElevatorGearRatio = (1 / 4);
+    public static final double kGearTeethPerRotation = 16;
+
+    // Need to get these values and change them later
+    public static final double kGearDiameter = 1;
+    //Should be correct
+    public static final double kChainDistancePerRevolution = 4;
+
+    //The final calculation of encoder ticks to centimeters
+    //Need to confirm that this is the right value
+    public static final double kEncoderTicksToCentimeters = 
+    (kEncoderTicksPerRotation / kElevatorGearRatio)
+    * (kElevatorGearRatio / kGearTeethPerRotation)
+    * (kGearTeethPerRotation / kGearDiameter)
+    * (kGearDiameter / kChainDistancePerRevolution)  //Convert Inches to centimeters by dividing by 2.54
+    / 2.54;
+    // Need to double check this value
+    public static final double kVoltageMultiplier = 1.5;
   }
 
   /**
@@ -251,8 +274,8 @@ public final class Constants {
     public static final int kAButton = Button.kA.value;
     public static final int kBButton = Button.kB.value;
     public static final int kBackButton = Button.kBack.value;
-    //public static final int pov = XboxController.getPOV();
-    //if (pov == 90){}
+    // public static final int pov = XboxController.getPOV();
+    // if (pov == 90){}
 
     public static final double kDeadband = 0.15;
     public static final double kHighDeadband = 0.25;
@@ -287,12 +310,12 @@ public final class Constants {
   }
 
   public static final class CoralConstants {
-    
-  public static final int kCoralSparkMaxCanID = 6;
-  public static final double kCoralIntakeSpeed = 1.0;
-  public static final double kCoralIntakeTime = 1.0;
-  public static final double kCoralOuttakeSpeed = 1.0;
-  public static final double kCoralOuttakeTime = 1.0;
+
+    public static final int kCoralSparkMaxCanID = 6;
+    public static final double kCoralIntakeSpeed = 1.0;
+    public static final double kCoralIntakeTime = 1.0;
+    public static final double kCoralOuttakeSpeed = 1.0;
+    public static final double kCoralOuttakeTime = 1.0;
   }
 
 }

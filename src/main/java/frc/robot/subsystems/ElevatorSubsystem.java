@@ -9,6 +9,7 @@ import java.util.function.DoubleSupplier;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkClosedLoopController;
+import com.revrobotics.spark.SparkLimitSwitch;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.ClosedLoopConfig;
@@ -25,12 +26,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class ElevatorSubsystem extends SubsystemBase {
 
-    private SparkMax leftElevator;
-    private SparkMax rightElevator;
-    private RelativeEncoder leftEncoder;
-    private RelativeEncoder rightEncoder;
-    private SparkClosedLoopController m_LeftpidController;
-    private SparkClosedLoopController m_RightpidController;
+    private SparkMax elevator;
+    private RelativeEncoder encoder;
+    private SparkClosedLoopController m_pidController;
     private double kS;
     private double kG;
     private double kV;
@@ -45,34 +43,29 @@ public class ElevatorSubsystem extends SubsystemBase {
     private TrapezoidProfile profile;
     private TrapezoidProfile.State goal;
     private TrapezoidProfile.State setpoint;
+    private SparkLimitSwitch forwardLimit = elevator.getForwardLimitSwitch();
 
     public ElevatorSubsystem() {
-        leftElevator = new SparkMax(Constants.LiftConstants.kLeftLiftControllerPort, MotorType.kBrushless);
-        rightElevator = new SparkMax(Constants.LiftConstants.kRightLiftControllerPort, MotorType.kBrushless);
+        elevator = new SparkMax(Constants.ElevatorConstants.kElevatorPort, MotorType.kBrushless);
 
-        leftEncoder = leftElevator.getEncoder();
-        rightEncoder = rightElevator.getEncoder();
+        encoder = elevator.getEncoder();
 
         // initialize the PID controller
-        m_LeftpidController = leftElevator.getClosedLoopController();
-        m_RightpidController = rightElevator.getClosedLoopController();
-            
+        m_pidController = elevator.getClosedLoopController();
+
+    }
+
+    public boolean isLimitSwitchPressed() {
+        return forwardLimit.isPressed();
     }
 
     public void resetEncoders() {
-        leftElevator.set(0);
-        rightElevator.set(0);
-
-        leftEncoder.setPosition(0);
-        rightEncoder.setPosition(0);
+        encoder.setPosition(0);
+        elevator.set(0);
     }
 
-    public double getLeftEncoder() {
-        return leftEncoder.getPosition();
-    }
-
-    public double getRightEncoder() {
-        return rightEncoder.getPosition();
+    public double getEncoder() {
+        return encoder.getPosition();
     }
 
     /**
@@ -82,20 +75,34 @@ public class ElevatorSubsystem extends SubsystemBase {
      */
 
     public void moveElevator(DoubleSupplier power) {
-        rightElevator.set(power.getAsDouble());
-        leftElevator.set(power.getAsDouble());
+        elevator.set(power.getAsDouble());
     }
 
-    public void moveToPosition(double position) {
 
-        m_LeftpidController.setReference(position, SparkBase.ControlType.kPosition);
-        m_RightpidController.setReference(position, SparkBase.ControlType.kPosition);
+    // public static final double kEncoderTicksPerRotation = 42;
+    // public static final double kElevatorGearRatio = (1 / 4);
+    // public static final double kGearTeethPerRotation = 16;
+
+    // // Need to get these values and change them later
+    // public static final double kGearDiameter = 0;
+    // public static final double kChainDistancePerRevolution = 0;
+
+
+
+    public void moveToPosition(double positionCentimeters) {
+
+        m_pidController.setReference(Constants.ElevatorConstants.kEncoderTicksToCentimeters
+         *  positionCentimeters, SparkBase.ControlType.kPosition);
+    }
+
+    public void setRawPower(double power) {
+        voltage = power * Constants.ElevatorConstants.kVoltageMultiplier;
+        elevator.setVoltage(voltage);
     }
 
     public void setSpeed(DoubleSupplier speed) {
         double vroom = speed.getAsDouble();
-        leftElevator.set(vroom);
-        rightElevator.set(vroom);
+        elevator.set(vroom);
     }
 
     // public boolean limitSwitchTriggered() {
