@@ -212,22 +212,16 @@ public final class Constants {
 
     // Physical constants
     public static final double kEncoderTicksPerRotation = 42;
-    public static final double kElevatorGearRatio = (1 / 4);
-    public static final double kGearTeethPerRotation = 16;
-
-    // Need to get these values and change them later
-    public static final double kGearDiameter = 1;
-    //Should be correct
+    public static final double kElevatorGearRatio = 4;
     public static final double kChainDistancePerRevolution = 4;
 
     //The final calculation of encoder ticks to centimeters
-    //Need to confirm that this is the right value
     public static final double kEncoderTicksToCentimeters = 
-    (kEncoderTicksPerRotation / kElevatorGearRatio)
-    * (kElevatorGearRatio / kGearTeethPerRotation)
-    * (kGearTeethPerRotation / kGearDiameter)
-    * (kGearDiameter / kChainDistancePerRevolution)  //Convert Inches to centimeters by dividing by 2.54
+    kEncoderTicksPerRotation
+    * kElevatorGearRatio
+    / kChainDistancePerRevolution
     / 2.54;
+
     // Need to double check this value
     public static final double kVoltageMultiplier = 1.5;
   }
