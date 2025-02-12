@@ -58,7 +58,7 @@ public final class Configs {
 
         static {
             // Use module constants to calculate conversion factors and feed forward gain.
-            double drivingVelocityFeedForward = 1 / ModuleConstants.kDriveWheelFreeSpeedRps;
+            double elevatorFF = 1 / Constants.ElevatorConstants.kElevatorFreeSpeedRps;
 
             motorConfig
                     .idleMode(IdleMode.kBrake)
@@ -68,9 +68,8 @@ public final class Configs {
                     .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
                     // These are example gains you may need to them for your own robot!
                     .pid(1.0, 0, 0)
-                    .velocityFF(drivingVelocityFeedForward)
+                    .velocityFF(elevatorFF)
                     .outputRange(-1, 1);
         }
     }
-
 }
