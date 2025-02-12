@@ -30,13 +30,24 @@ public class ElevatorManualLift extends Command {
     @Override
     public void execute() {
         double speed = power.getAsDouble();
-        speed = speed * Math.abs(speed);
+        //Cube it
+        speed = speed * Math.abs(speed) * Math.abs(speed);
 
         if (Math.abs(speed) < OIConstants.kDeadband) {
             speed = 0;
         }
 
-        this.elevator_subsystem.setRawPower(speed);
+        this.elevator_subsystem.setSpeed(speed);
+    }
+
+    @Override
+    public boolean isFinished(){
+        return false; //elevator_subsystem.isLimitSwitchPressed();
+    }
+
+    @Override
+    public void end(boolean interrupted){
+        this.elevator_subsystem.setRawPower(0);
     }
 
 }

@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.ElevatorConstants;
+import frc.robot.Configs;
 
 import java.util.function.DoubleSupplier;
 
@@ -12,6 +13,8 @@ import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLimitSwitch;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkBase.PersistMode;
+import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.config.ClosedLoopConfig;
 import com.revrobotics.spark.config.ClosedLoopConfigAccessor;
 import com.revrobotics.spark.config.SparkBaseConfig;
@@ -29,6 +32,9 @@ public class ElevatorSubsystem extends SubsystemBase {
     private SparkMax elevator;
     private RelativeEncoder encoder;
     private SparkClosedLoopController m_pidController;
+    // private SparkLimitSwitch bottomForwardLimit;
+    private DigitalInput bottomForwardLimit = new DigitalInput(1);
+    // private SparkLimitSwitch topForwardLimit;
     private double kS;
     private double kG;
     private double kV;
@@ -43,21 +49,35 @@ public class ElevatorSubsystem extends SubsystemBase {
     private TrapezoidProfile profile;
     private TrapezoidProfile.State goal;
     private TrapezoidProfile.State setpoint;
-    private SparkLimitSwitch forwardLimit = elevator.getForwardLimitSwitch();
 
     public ElevatorSubsystem() {
-        elevator = new SparkMax(Constants.ElevatorConstants.kElevatorPort, MotorType.kBrushless);
+        elevator = new SparkMax(Constants.ElevatorConstants.kElevatorSparkMaxCanID, MotorType.kBrushless);
 
         encoder = elevator.getEncoder();
 
         // initialize the PID controller
         m_pidController = elevator.getClosedLoopController();
+        elevator.configure(Configs.ElevatorMotor.motorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+
+        //topForwardLimit = elevator.getReverseLimitSwitch();
+       // bottomForwardLimit = elevator.();
 
     }
 
     public boolean isLimitSwitchPressed() {
-        return forwardLimit.isPressed();
+        // if(bottomForwardLimit.isPressed() /*|| topForwardLimit.isPressed()*/){
+        //     return true;
+        // }else{
+        //     return false;
+        // }
+        if(bottomForwardLimit.get()){
+            return true;
+        }
+        else{
+            return false;
+        }
     }
+
 
     public void resetEncoders() {
         encoder.setPosition(0);
@@ -65,7 +85,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     }
 
     public double getEncoder() {
-        return encoder.getPosition();
+        return -encoder.getPosition();
     }
 
     /**
@@ -89,10 +109,11 @@ public class ElevatorSubsystem extends SubsystemBase {
 
 
 
-    public void moveToPosition(double positionCentimeters) {
+    public void moveToPosition(double positionTicks) {
 
-        m_pidController.setReference(Constants.ElevatorConstants.kEncoderTicksToCentimeters
-         *  positionCentimeters, SparkBase.ControlType.kPosition);
+        m_pidController.setReference(positionTicks, SparkBase.ControlType.kPosition);
+
+        SmartDashboard.putNumber("Position ticks moveToPosition()", positionTicks);
     }
 
     public void setRawPower(double power) {
@@ -100,14 +121,19 @@ public class ElevatorSubsystem extends SubsystemBase {
         elevator.setVoltage(voltage);
     }
 
-    public void setSpeed(DoubleSupplier speed) {
-        double vroom = speed.getAsDouble();
-        elevator.set(vroom);
+    public void setSpeed(double speed) {
+        //double vroom = speed.getAsDouble();
+        elevator.set(speed);
     }
 
     // public boolean limitSwitchTriggered() {
     // return m_limit_switch.get();
     // }
     public void periodic() {
+        SmartDashboard.putNumber("Encoder Ticks", getEncoder());
+        SmartDashboard.putNumber("Centimeters", getEncoder() * Constants.ElevatorConstants.kEncoderTicksToCentimeters);
+       // SmartDashboard.putBoolean("Is top Limit switch triggered", topForwardLimit.isPressed());
+        // SmartDashboard.putBoolean("Is bottom Limit switch triggered", bottomForwardLimit.isPressed());
+        SmartDashboard.putBoolean("Is bottom Limit switch triggered", isLimitSwitchPressed());
     }
 }

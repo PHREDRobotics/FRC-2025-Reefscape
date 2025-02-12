@@ -44,7 +44,7 @@ public class RobotContainer {
         // MotorTestSubsystem();
         private final LogitechPro joyStick = new LogitechPro(1);
 
-        private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
+    //    private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
         private final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
 
         // private final MotorTestSubsystem motorTestSubsystem = new
@@ -94,6 +94,7 @@ public class RobotContainer {
                 // Define triggers
                 Trigger xButton = driverJoystick.x();
                 Trigger yButton = driverJoystick.y();
+                Trigger bButton = driverJoystick.b();
                 Trigger dpadDown = driverJoystick.povDown();
                 Trigger dpadUp = driverJoystick.povUp();
                 Trigger dpadLeft = driverJoystick.povLeft();
@@ -107,8 +108,11 @@ public class RobotContainer {
                                 () -> joyStick.getThrottl(),
                                 () -> joyStick.getTrigger()));
      */
-                                
-                xButton.whileTrue(new ElevatorManualLift(() -> driverJoystick.getLeftTriggerAxis(), elevatorSubsystem));
+                elevatorSubsystem.setDefaultCommand(new ElevatorManualLift(() -> driverJoystick.getLeftY(), elevatorSubsystem));
+                //Probably change these later to suit the drivers but it is fine for testing
+                xButton.whileTrue(new ElevatorManualLift(() -> driverJoystick.getLeftY(), elevatorSubsystem));
+                yButton.onTrue(new ResetElevator(elevatorSubsystem));
+                bButton.onTrue(new AutoElevatorCommand(Constants.ElevatorConstants.kCoralLevel4, elevatorSubsystem));
                 // limitTrigger.onTrue(
                 // new AutoResetArmEncoder(armSubsystem, limitSwitch.get()));
 

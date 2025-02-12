@@ -198,28 +198,33 @@ public final class Constants {
     public static final double kD = 0.0;
     
     // Need to change these values later
-    public static final int kElevatorLimitSwitchPort = 0;
-    public static final int kElevatorPort = 0;
-    public static final double kProcessor = 0;
-    public static final double kLevel1 = 1;
-    public static final double kLevel2 = 2;
-    public static final double kLevel3 = 3;
-    public static final double kLevel4 = 4;
-    public static final double kHumanPlayerStationHeight = 5;
+    //Correct 0 is actually 0
+    //10 inches is 6.28 from 0
+    //0 is 27 inches from the bottom
+    //Level 2 is 32 inches
+    //Also 3.23
+    //Need to go to 48 inches
+    //Need to go to 72 inches
+    public static final int kElevatorSparkMaxCanID = 32;
+    public static final double kCoralLevel1 = 0;
+    public static final double kCoralLevel2 = 3.23;
+    public static final double kCoralLevel3 = 13.4;
+    public static final double kCoralLevel4 = 28;
+    public static final double kHumanPlayerStationLevel = 0;
 
-    //Might not have a second limitswitch
-    public static final int kElevatorLimitSwitchPortTop = 0;
 
     // Physical constants
     public static final double kEncoderTicksPerRotation = 42;
     public static final double kElevatorGearRatio = 4;
     public static final double kChainDistancePerRevolution = 4;
+    public static final double kElevatorDistancePerChainDistance = 2/3;
 
     //The final calculation of encoder ticks to centimeters
     public static final double kEncoderTicksToCentimeters = 
     kEncoderTicksPerRotation
     * kElevatorGearRatio
-    / kChainDistancePerRevolution
+    / kChainDistancePerRevolution 
+    / kElevatorDistancePerChainDistance //Convert from inches to centimeters
     / 2.54;
 
     // Need to double check this value
@@ -227,8 +232,7 @@ public final class Constants {
   }
 
   /**
-   * Constants for autonomous
-   */
+   * Constants for autonomous   */
   public static final class AutoConstants {
     public static final double kMaxSpeedMetersPerSecond = DriveConstants.kPhysicalMaxSpeedMetersPerSecond / 4;
     public static final double kMaxAngularSpeedRadiansPerSecond = //

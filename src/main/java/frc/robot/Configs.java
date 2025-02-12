@@ -53,4 +53,24 @@ public final class Configs {
                     .positionWrappingInputRange(0, turningFactor);
         }
     }
+    public static final class ElevatorMotor {
+        public static final SparkMaxConfig motorConfig = new SparkMaxConfig();
+
+        static {
+            // Use module constants to calculate conversion factors and feed forward gain.
+            double drivingVelocityFeedForward = 1 / ModuleConstants.kDriveWheelFreeSpeedRps;
+
+            motorConfig
+                    .idleMode(IdleMode.kBrake)
+                    .smartCurrentLimit(50)
+                    .inverted(true);
+            motorConfig.closedLoop
+                    .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+                    // These are example gains you may need to them for your own robot!
+                    .pid(1.0, 0, 0)
+                    .velocityFF(drivingVelocityFeedForward)
+                    .outputRange(-1, 1);
+        }
+    }
+
 }

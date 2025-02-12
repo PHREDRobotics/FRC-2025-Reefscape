@@ -4,11 +4,15 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ElevatorSubsystem;
 
 public class ResetElevator extends Command {
-    ElevatorSubsystem elevator_subsystem;
+    ElevatorSubsystem m_elevatorSubsystem;
+
+    public ResetElevator(ElevatorSubsystem elevatorSubsystem) {
+        m_elevatorSubsystem = elevatorSubsystem;
+    }
 
     @Override
     public void initialize() {
-        elevator_subsystem.setRawPower(-0.3);
+        //elevator_subsystem.setRawPower(-0.3);
     }
 
     @Override
@@ -18,11 +22,11 @@ public class ResetElevator extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        elevator_subsystem.resetEncoders();
+        m_elevatorSubsystem.resetEncoders();
     }
 
     @Override
     public boolean isFinished() {
-        return elevator_subsystem.isLimitSwitchPressed();
+        return m_elevatorSubsystem.isLimitSwitchPressed();
     }
 }
