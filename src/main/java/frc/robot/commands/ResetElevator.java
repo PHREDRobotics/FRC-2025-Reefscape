@@ -12,7 +12,7 @@ public class ResetElevator extends Command {
 
     @Override
     public void initialize() {
-        //elevator_subsystem.setRawPower(-0.3);
+        m_elevatorSubsystem.setSpeed(0);
     }
 
     @Override
@@ -22,6 +22,7 @@ public class ResetElevator extends Command {
 
     @Override
     public void end(boolean interrupted) {
+        m_elevatorSubsystem.setSpeed(0);
         m_elevatorSubsystem.resetEncoders();
     }
 

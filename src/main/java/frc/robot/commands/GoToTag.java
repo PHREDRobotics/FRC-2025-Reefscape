@@ -1,11 +1,14 @@
 package frc.robot.commands;
 
+import frc.robot.Constants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -34,8 +37,6 @@ public class GoToTag extends Command {
 
     private int targetTag;
 
-    private boolean isFinished;
-
     // private static final int TAG_TO_CHASE = 5;
     // private static final Transform3d TAG_TO_GOAL = new Transform3d(
     // new Translation3d(1.0, 0.0, 0.0),
@@ -51,10 +52,6 @@ public class GoToTag extends Command {
         omegaController.enableContinuousInput(-Math.PI, Math.PI);
 
         targetTag = target_tag;
-
-        if (targetTag == -1) {
-            isFinished = true;
-        }
 
         // Use addRequirements() here to declare subsystem dependencies.
         addRequirements(m_vision_subsystem);
@@ -156,18 +153,16 @@ public class GoToTag extends Command {
         // 3. set speeds using pid
         xSpeed = xController.calculate(currentPose2d.getX(), targetxState, X_CONSTRAINTS);
         ySpeed = yController.calculate(currentPose2d.getY(), targetyState, Y_CONSTRAINTS);
-        xSpeed = omegaController.calculate(currentPose2d.getRotation().getRadians(), targetomegaState,
+        turningSpeed = omegaController.calculate(currentPose2d.getRotation().getRadians(), targetomegaState,
                 OMEGA_CONSTRAINTS);
         // 4. make chassis speeds
+        m_swerve_subsystem.drive(() -> xSpeed,() -> ySpeed,() -> turningSpeed,() -> true);
+        // 5. ignore this junk:
         // ChassisSpeeds chassisSpeeds;
-        // chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(
-        // xSpeed, ySpeed, turningSpeed, m_swerve_subsystem.getRotation2d());
+        // chassisSpeeds = ChassisSpeeds.fromRobotRelativeSpeeds(
+        // xSpeed, ySpeed, turningSpeed, m_swerve_subsystem.getPose().getRotation());
         // // 5. Convert chassis speeds to individual module states
-        // SwerveModuleState[] moduleStates =
-        // DriveConstants.kDriveKinematics.toSwerveModuleStates(chassisSpeeds);
-        // // state.angle.getRadians());
-        // // 6. Output each module states to wheels
-        // m_swerve_subsystem.setModuleStates(moduleStates);
+        // m_swerve_subsystem.drive(chassisSpeeds, () -> false);
 
         // Smart dash varibs. The string ones proably work
         SmartDashboard.putNumber("X-Speed", xSpeed);
@@ -185,7 +180,7 @@ public class GoToTag extends Command {
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return isFinished;
+        return false;
     }
 
     private Pose2d getTargetPose(Pose2d tag) {

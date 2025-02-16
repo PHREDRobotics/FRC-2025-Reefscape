@@ -10,6 +10,7 @@ import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -22,6 +23,7 @@ import frc.robot.commands.ElevatorManualLift;
 import frc.robot.commands.ResetElevator;
 import frc.robot.commands.AutoElevatorCommand;
 import frc.robot.commands.ExtendLift;
+import frc.robot.commands.GoToTag;
 import frc.robot.commands.RetractLift;
 import frc.robot.commands.SwerveReset;
 import frc.robot.controls.LogitechPro;
@@ -36,7 +38,7 @@ import frc.robot.subsystems.ElevatorSubsystem;
 public class RobotContainer {
     SwerveSubsystem m_swerveSubsystem;
     AlgaeSubsystem m_algaeSubsystem;
-    //ClimbSubsystem m_climbSubsystem;
+    // ClimbSubsystem m_climbSubsystem;
     CoralSubsystem m_coralSubsystem;
     ElevatorSubsystem m_elevatorSubsystem;
     VisionSubsystem m_visionSubsystem;
@@ -55,7 +57,7 @@ public class RobotContainer {
         m_swerveSubsystem = new SwerveSubsystem();
         m_algaeSubsystem = new AlgaeSubsystem();
         m_coralSubsystem = new CoralSubsystem();
-        //m_climbSubsystem = new ClimbSubsystem();
+        // m_climbSubsystem = new ClimbSubsystem();
         m_elevatorSubsystem = new ElevatorSubsystem();
         m_visionSubsystem = new VisionSubsystem();
 
@@ -80,6 +82,7 @@ public class RobotContainer {
         // Triggers
         Trigger fieldOrientedTrigger = new Trigger(() -> m_driverJoystick.getTrigger());
         Trigger resetTrigger = new Trigger(() -> m_driverJoystick.getRawButton(1));
+        Trigger tagTrigger = new Trigger(() -> m_driverJoystick.getRawButton(2));
 
         Trigger bButton = m_xboxController.b();
         Trigger aButton = m_xboxController.a();
@@ -105,21 +108,26 @@ public class RobotContainer {
         // Assign Commands
 
         // Xbox
-        bButton.onTrue(new AlgaeIntakeCommand(m_algaeSubsystem));
-        aButton.onTrue(new AlgaeOuttakeCommand(m_algaeSubsystem));
-        xButton.whileTrue(new CoralIntakeCommand(m_coralSubsystem));
-        yButton.onTrue(new CoralOuttakeCommand(m_coralSubsystem));
-        //startButton.onTrue(new ExtendLift(m_climbSubsystem));
-        //backButton.onTrue(new RetractLift(m_climbSubsystem));
+        xButton.onTrue(new AlgaeIntakeCommand(m_algaeSubsystem));
+        yButton.onTrue(new AlgaeOuttakeCommand(m_algaeSubsystem));
+        aButton.whileTrue(new CoralIntakeCommand(m_coralSubsystem));
+        bButton.onTrue(new CoralOuttakeCommand(m_coralSubsystem));
+        // startButton.onTrue(new ExtendLift(m_climbSubsystem));
+        // backButton.onTrue(new RetractLift(m_climbSubsystem));
         leftBumper.onTrue(new ResetElevator(m_elevatorSubsystem));
-        dPadDown.onTrue(new AutoElevatorCommand(Constants.ElevatorConstants.kCoralLevel1, m_elevatorSubsystem));
-        dPadLeft.onTrue(new AutoElevatorCommand(Constants.ElevatorConstants.kCoralLevel2, m_elevatorSubsystem));
-        dPadRight.onTrue(new AutoElevatorCommand(Constants.ElevatorConstants.kCoralLevel3, m_elevatorSubsystem));
-        dPadUp.onTrue(new AutoElevatorCommand(Constants.ElevatorConstants.kCoralLevel4, m_elevatorSubsystem));
-        rightBumper.onTrue(
-                new AutoElevatorCommand(Constants.ElevatorConstants.kHumanPlayerStationLevel, m_elevatorSubsystem));
-        
-        m_elevatorSubsystem.setDefaultCommand(new ElevatorManualLift(() -> m_xboxController.getLeftY(), m_elevatorSubsystem));
+        dPadDown.onTrue(new SequentialCommandGroup(new ResetElevator(m_elevatorSubsystem),
+                new AutoElevatorCommand(Constants.ElevatorConstants.kCoralLevel1, m_elevatorSubsystem)));
+        dPadLeft.onTrue(new SequentialCommandGroup(new ResetElevator(m_elevatorSubsystem),
+                new AutoElevatorCommand(Constants.ElevatorConstants.kCoralLevel2, m_elevatorSubsystem)));
+        dPadRight.onTrue(new SequentialCommandGroup(new ResetElevator(m_elevatorSubsystem),
+                new AutoElevatorCommand(Constants.ElevatorConstants.kCoralLevel3, m_elevatorSubsystem)));
+        dPadUp.onTrue(new SequentialCommandGroup(new ResetElevator(m_elevatorSubsystem),
+                new AutoElevatorCommand(Constants.ElevatorConstants.kCoralLevel4, m_elevatorSubsystem)));
+        rightBumper.onTrue(new SequentialCommandGroup(new ResetElevator(m_elevatorSubsystem),
+                new AutoElevatorCommand(Constants.ElevatorConstants.kHumanPlayerStationLevel, m_elevatorSubsystem)));
+
+        m_elevatorSubsystem
+                .setDefaultCommand(new ElevatorManualLift(() -> m_xboxController.getLeftY(), m_elevatorSubsystem));
 
         // Joystick
         m_swerveSubsystem.setDefaultCommand(new DriveCommand(
@@ -131,6 +139,8 @@ public class RobotContainer {
                 () -> !fieldOrientedTrigger.getAsBoolean())); // will be robot-centric if held down
 
         resetTrigger.onTrue(new SwerveReset(m_swerveSubsystem));
+
+        tagTrigger.onTrue(new GoToTag(m_visionSubsystem, m_swerveSubsystem, 9));
     }
 
     public Command getAutonomousCommand(AutoSwitcher autoMode) {
