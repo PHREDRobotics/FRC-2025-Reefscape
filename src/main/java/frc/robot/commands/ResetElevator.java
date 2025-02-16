@@ -12,7 +12,7 @@ public class ResetElevator extends Command {
 
     @Override
     public void initialize() {
-        m_elevatorSubsystem.setSpeed(0);
+        m_elevatorSubsystem.setSpeed(-0.01);
     }
 
     @Override

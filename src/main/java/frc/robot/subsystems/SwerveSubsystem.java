@@ -197,7 +197,7 @@ public class SwerveSubsystem extends SubsystemBase {
                     m_gyro.getRotation2d());
         }
     }
-    
+
     public Pose2d getPose() {
         return m_odometry.getPoseMeters();
     }
@@ -278,22 +278,22 @@ public class SwerveSubsystem extends SubsystemBase {
 
         m_poseEstimatorField.setRobotPose(m_poseEstimator.getEstimatedPosition());
 
-        SmartDashboard.putNumber("F.L. Drive motor temp", m_frontLeft.getDriveTemp());
+        // SmartDashboard.putNumber("F.L. Drive motor temp", m_frontLeft.getDriveTemp());
 
-        SmartDashboard.putNumber("Swerve/FrontLeft/Speed", m_frontLeft.getState().speedMetersPerSecond);
-        SmartDashboard.putNumber("Swerve/FrontLeft/Angle", m_frontLeft.getPosition().angle.getDegrees());
-        SmartDashboard.putNumber("Swerve/FrontRight/Speed", m_frontRight.getState().speedMetersPerSecond);
-        SmartDashboard.putNumber("Swerve/FrontRight/Angle", m_frontRight.getPosition().angle.getDegrees());
-        SmartDashboard.putNumber("Swerve/BackLeft/Speed", m_backLeft.getState().speedMetersPerSecond);
-        SmartDashboard.putNumber("Swerve/BackLeft/Angle", m_backLeft.getPosition().angle.getDegrees());
-        SmartDashboard.putNumber("Swerve/BackRight/Speed", m_backRight.getState().speedMetersPerSecond);
-        SmartDashboard.putNumber("Swerve/BackRight/Angle", m_backRight.getPosition().angle.getDegrees());
+        // SmartDashboard.putNumber("Swerve/FrontLeft/Speed", m_frontLeft.getState().speedMetersPerSecond);
+        // SmartDashboard.putNumber("Swerve/FrontLeft/Angle", m_frontLeft.getPosition().angle.getDegrees());
+        // SmartDashboard.putNumber("Swerve/FrontRight/Speed", m_frontRight.getState().speedMetersPerSecond);
+        // SmartDashboard.putNumber("Swerve/FrontRight/Angle", m_frontRight.getPosition().angle.getDegrees());
+        // SmartDashboard.putNumber("Swerve/BackLeft/Speed", m_backLeft.getState().speedMetersPerSecond);
+        // SmartDashboard.putNumber("Swerve/BackLeft/Angle", m_backLeft.getPosition().angle.getDegrees());
+        // SmartDashboard.putNumber("Swerve/BackRight/Speed", m_backRight.getState().speedMetersPerSecond);
+        // SmartDashboard.putNumber("Swerve/BackRight/Angle", m_backRight.getPosition().angle.getDegrees());
 
-        SmartDashboard.putString("Speeds", getSpeeds(true).toString());
-        SmartDashboard.putString("States/FL", getModuleStates()[0].toString());
-        SmartDashboard.putString("States/FR", getModuleStates()[1].toString());
-        SmartDashboard.putString("States/BL", getModuleStates()[2].toString());
-        SmartDashboard.putString("States/BR", getModuleStates()[3].toString());
+        // SmartDashboard.putString("Speeds", getSpeeds(true).toString());
+        // SmartDashboard.putString("States/FL", getModuleStates()[0].toString());
+        // SmartDashboard.putString("States/FR", getModuleStates()[1].toString());
+        // SmartDashboard.putString("States/BL", getModuleStates()[2].toString());
+        // SmartDashboard.putString("States/BR", getModuleStates()[3].toString());
 
         
 

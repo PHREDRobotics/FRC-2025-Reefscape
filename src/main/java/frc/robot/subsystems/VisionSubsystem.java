@@ -124,17 +124,17 @@ public class VisionSubsystem extends SubsystemBase {
     ty = m_table.getEntry("ty").getDouble(0);
     ta = m_table.getEntry("ta").getDouble(0);
     tid = m_table.getEntry("tid").getDouble(0);
-    SmartDashboard.putBoolean("Sees target?", !(tid == -1.0));
+    // SmartDashboard.putBoolean("Sees target?", !(tid == -1.0));
     SmartDashboard.putNumber("Target:", tid);
-    SmartDashboard.putNumber("Limelight a value.", ta);
-    SmartDashboard.putNumber("Limelight y value.", ty);
-    SmartDashboard.putNumber("Limelight x value.", tx);
+    // SmartDashboard.putNumber("Limelight a value.", ta);
+    // SmartDashboard.putNumber("Limelight y value.", ty);
+    // SmartDashboard.putNumber("Limelight x value.", tx);
     // SmartDashboard.putNumber("Estimated Distance", getTargetDistance());
     // SmartDashboard.putNumber("Estimated Rough Distance",
     // getRoughTargetDistance());
     // SmartDashboard.putNumber("Limelight v value.", tv);
-    SmartDashboard.putBoolean("Is the target in range?", m_LimelightHasValidTarget);
-    SmartDashboard.putBoolean("Is the target centered", m_IsLimeLightCentered);
+    // SmartDashboard.putBoolean("Is the target in range?", m_LimelightHasValidTarget);
+    // SmartDashboard.putBoolean("Is the target centered", m_IsLimeLightCentered);
 
     // This method will be called once per scheduler run
     // It should be able to recognize the april tags, which allows us to push a

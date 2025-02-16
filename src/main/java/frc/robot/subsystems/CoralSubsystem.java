@@ -14,8 +14,8 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 public class CoralSubsystem extends SubsystemBase {
   private static final Timer timer = new Timer();
-  public SparkMax coralMotorSparkMax = new SparkMax(CoralConstants.kCoralCANId, MotorType.kBrushless);
-  public SparkLimitSwitch forwardLimit = coralMotorSparkMax.getForwardLimitSwitch();
+  public SparkMax coralMotorSparkMax;
+  public SparkLimitSwitch forwardLimit;
   
   
 
@@ -23,6 +23,9 @@ public class CoralSubsystem extends SubsystemBase {
   public double outtakeSpeed = CoralConstants.kCoralOuttakeSpeed;
 
   public CoralSubsystem() {
+    coralMotorSparkMax = new SparkMax(CoralConstants.kCoralCANId, MotorType.kBrushless);
+    forwardLimit = coralMotorSparkMax.getForwardLimitSwitch();
+
     coralMotorSparkMax.configure(Configs.CoralMotor.motorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   }
 
@@ -48,7 +51,7 @@ public class CoralSubsystem extends SubsystemBase {
  }
 
   public boolean isCoralLoaded() {
-    return !forwardLimit.isPressed();
+    return forwardLimit.isPressed();
   }
 
   public static boolean outtakeIsTimeDone() {
@@ -58,10 +61,10 @@ public class CoralSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    SmartDashboard.putBoolean("Pressed?", isCoralLoaded());
     SmartDashboard.putBoolean("Manual Override Press", SmartDashboard.getBoolean("Manual Override Press", false));
-    SmartDashboard.putBoolean("Is Limit Switch Triggered?", !forwardLimit.isPressed());
+    SmartDashboard.putBoolean("Is Coral Switch Triggered?", forwardLimit.isPressed());
     
+
 
   // Slider things VARIABLES
   outtakeSpeed=SmartDashboard.getNumber("Outtake Speed", outtakeSpeed);

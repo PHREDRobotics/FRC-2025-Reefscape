@@ -190,9 +190,9 @@ public final class Configs {
             motorConfig.closedLoop
                     .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
                     // These are example gains you may need to them for your own robot!
-                    .pid(1.15, 0.0002, 0.0001)
-                    .outputRange(-1, 1);
-            // .velocityFF(Constants.ElevatorConstants.kVelocityFF);
+                    .pid(1.15, 0, 0)
+                    .outputRange(-1, 1)
+                    .velocityFF(Constants.ElevatorConstants.kVelocityFF);
             motorConfig.closedLoop.maxMotion
                     .maxAcceleration(Constants.ElevatorConstants.kMaxAcceleration)
                     .maxVelocity(Constants.ElevatorConstants.kMaxMotorSpeed)
@@ -202,7 +202,7 @@ public final class Configs {
 
     public static final class CoralMotor {
         public static final SparkMaxConfig motorConfig = new SparkMaxConfig();
-  // 😏
+  
 
         static {
             motorConfig
@@ -212,7 +212,7 @@ public final class Configs {
             motorConfig.limitSwitch
                     .reverseLimitSwitchEnabled(false)
                     .forwardLimitSwitchEnabled(true);
-                    // .forwardLimitSwitchType(Type.kNormallyClosed);
+                    //.forwardLimitSwitchType(Type.kNormallyClosed);
         }
     }
 }
