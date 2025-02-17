@@ -89,6 +89,8 @@ public class Constants {
         public static final double kCoralIntakeSpeed = 0.08;
         public static final double kCoralIntakeTime = 1.0;
         public static final double kCoralOuttakeSpeed = -0.5;
+        public static final double kCoralL1OuttakeSpeed = -0.25;
+        public static final double kCoralL4OuttakeSpeed = -0.25;
         public static final double kCoralOuttakeTime = 1.0;
     }
 
@@ -112,14 +114,14 @@ public class Constants {
         public static final double kI = 0.0;
         public static final double kD = 0.0;
 
-        public static final double kVelocityFF = 0.05;
+        public static final double kVelocityFF = 0.2;
 
         public static final int kElevatorCANId = 32;
 
         public static final double kCoralLevel1 = 0;
         public static final double kCoralLevel2 = 3.23;
         public static final double kCoralLevel3 = 13.4;
-        public static final double kCoralLevel4 = 28;
+        public static final double kCoralLevel4 = 30.7;
         public static final double kHumanPlayerStationLevel = 5.14;
 
         // Physical constants

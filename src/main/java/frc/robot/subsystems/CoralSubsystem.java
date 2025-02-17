@@ -20,7 +20,9 @@ public class CoralSubsystem extends SubsystemBase {
   
 
   public double intakeSpeed = CoralConstants.kCoralIntakeSpeed;
-  public double outtakeSpeed = CoralConstants.kCoralOuttakeSpeed;
+  public double outtakeSpeedL2L3 = CoralConstants.kCoralOuttakeSpeed;
+  public double outtakeSpeedL1 = CoralConstants.kCoralL1OuttakeSpeed;
+  public double outtakeSpeedL4 = CoralConstants.kCoralL4OuttakeSpeed;
 
   public CoralSubsystem() {
     coralMotorSparkMax = new SparkMax(CoralConstants.kCoralCANId, MotorType.kBrushless);
@@ -29,9 +31,15 @@ public class CoralSubsystem extends SubsystemBase {
     coralMotorSparkMax.configure(Configs.CoralMotor.motorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   }
 
-  public void startOuttake() {
+  public void startOuttake(int level) {
     timer.reset();
-    coralMotorSparkMax.set(outtakeSpeed);
+    if(level == 1){
+      coralMotorSparkMax.set(outtakeSpeedL1);
+    } else if (level == 2 || level == 3){
+      coralMotorSparkMax.set(outtakeSpeedL2L3);
+    } else if (level == 4){
+      coralMotorSparkMax.set(outtakeSpeedL4);
+    }
     timer.start();
   }
 
@@ -67,9 +75,11 @@ public class CoralSubsystem extends SubsystemBase {
 
 
   // Slider things VARIABLES
-  outtakeSpeed=SmartDashboard.getNumber("Outtake Speed", outtakeSpeed);
+  outtakeSpeedL1=SmartDashboard.getNumber("Outtake L1 Speed", outtakeSpeedL1);
+  outtakeSpeedL4=SmartDashboard.getNumber("Outtake L4 Speed", outtakeSpeedL4);
   intakeSpeed=SmartDashboard.getNumber("Intake Speed", intakeSpeed);
-  SmartDashboard.putNumber("Outtake Speed", outtakeSpeed);
+  SmartDashboard.putNumber("Outtake L1 Speed", outtakeSpeedL1);
+  SmartDashboard.putNumber("Outtake L4 Speed", outtakeSpeedL4);
   SmartDashboard.putNumber("Intake Speed", intakeSpeed);
   // This method will be called once per scheduler run
   // We will have a pull in fast and slow and a push out fast and slow

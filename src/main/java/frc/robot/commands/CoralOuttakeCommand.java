@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 import frc.robot.subsystems.CoralSubsystem;
+import frc.robot.subsystems.ElevatorSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 
 
@@ -11,22 +12,27 @@ import edu.wpi.first.wpilibj2.command.Command;
 public class CoralOuttakeCommand extends Command {
   @SuppressWarnings("unused")
   private final CoralSubsystem coralSubsystem;
+  private final ElevatorSubsystem elevatorSubsystem;
+  private final int level;
 
   /**
    * Creates a new OuttakeCommand.
    *
    * @param subsystem The subsystem used by this command.
    */
-  public CoralOuttakeCommand(CoralSubsystem subsystem) {
-    coralSubsystem = subsystem;
+  public CoralOuttakeCommand(CoralSubsystem coralSubsystem, ElevatorSubsystem elevatorSubsystem, int level) {
+    this.coralSubsystem = coralSubsystem;
+    this.elevatorSubsystem = elevatorSubsystem;
+    this.level = level;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(subsystem);
+    addRequirements(coralSubsystem);
+    addRequirements(elevatorSubsystem);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    coralSubsystem.startOuttake();
+    coralSubsystem.startOuttake(level);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
