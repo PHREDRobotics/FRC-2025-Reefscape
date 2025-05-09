@@ -102,7 +102,7 @@ public class Constants {
         public static final class PhysicalConstants {
                 public static final double kRobotMassPounds = 120;
 
-                public static final double kBumperLength = 32;
+                public static final double kBumperLength = 35.5;
                 public static final double kTrackLength = 24;
 
                 public static final double kMaxSpeed = 6;

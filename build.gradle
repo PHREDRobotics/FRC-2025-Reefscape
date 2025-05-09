@@ -79,6 +79,14 @@ test {
     systemProperty 'junit.jupiter.extensions.autodetection.enabled', 'true'
 }
 
+javadoc {
+    source = sourceSets.main.allJava
+    destinationDir = file("docs/javadoc")
+    title = "PhRED 847"
+    options.addStringOption('header', '<b>PhRED Team 847 FRC 2025 Reefscape Code</b>')
+    options.addStringOption('bottom', '<b>PhRED Team 847</b>')
+}
+
 // Simulation configuration (e.g. environment variables).
 wpi.sim.addGui().defaultEnabled = true
 wpi.sim.addDriverstation()
